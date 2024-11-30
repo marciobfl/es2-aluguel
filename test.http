@@ -1,0 +1,33 @@
+@baseurl = http://localhost:3000
+
+###
+POST {{baseurl}}/ciclista
+Content-Type: application/json
+
+{
+  "ciclista": {
+    "nome": "string",
+    "nascimento": "2024-11-30",
+    "cpf": "78830917946",
+    "passaporte": {
+      "numero": "string",
+      "validade": "2024-11-30",
+      "pais": "WJ"
+    },
+    "nacionalidade": "string",
+    "email": "user@example.com",
+    "urlFotoDocumento": "string",
+    "senha": "string"
+  },
+  "meioDePagamento": {
+    "nomeTitular": "string",
+    "numero": "1234123412341234",
+    "validade": "2024-11-30",
+    "cvv": "1270"
+  }
+}
+###
+GET {{baseurl}}/ciclista/existeEmail/use@example.com
+
+###
+POST {{baseurl}}/ciclista/1/ativar
