@@ -25,7 +25,10 @@ export class CiclistaRepositoryImpl implements CiclistaRepository {
     return CiclistaEntity.toDomain(ciclista);
   }
   async create(ciclista: CreateCiclista): Promise<Ciclista> {
-    const createdCiclista = await this.ciclistaDatabase.save(ciclista);
+    const createdCiclista = await this.ciclistaDatabase.save({
+      ...ciclista,
+      status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+    });
     return CiclistaEntity.toDomain(createdCiclista);
   }
   update(): Promise<void> {

@@ -37,7 +37,7 @@ export class CiclistaService {
     });
 
     if (!idExists) {
-      throw new Error('Ciclista já cadastrado!\n');
+      throw new Error('Ciclista não encontrado!\n');
     }
 
     return this.ciclistaRepository.activateCiclista(idCiclista);

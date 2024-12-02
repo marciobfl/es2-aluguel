@@ -14,6 +14,5 @@ export class Ciclista {
   nascimento: string;
   email: string;
   urlFotoDocumento: string;
-  senha: string;
   passaporte: Passaporte;
 }

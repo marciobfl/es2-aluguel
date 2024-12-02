@@ -1,6 +1,6 @@
 export default class CartaoDeCredito {
   numero: string;
-  validate: string;
+  validade: string;
   cvv: string;
   nomeTitular: string;
 }
