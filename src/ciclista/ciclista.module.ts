@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import CiclistaController from './ciclista.controller';
 import { CiclistaService } from './ciclista.service';
-import { CiclistaRepositoryImpl } from './infra/database/repositories/ciclista.repository';
+import { TypeormCiclistaRepository } from './infra/database/repositories/typeorm-ciclista.repository';
 import { DataSource } from 'typeorm';
-import CiclistaEntity from './infra/database/entities/ciclista.entity';
+import TypeormCiclistaEntity from './infra/database/entities/typeorm-ciclista.entity';
 
 @Module({
   controllers: [CiclistaController],
@@ -12,8 +12,8 @@ import CiclistaEntity from './infra/database/entities/ciclista.entity';
     {
       provide: 'CiclistaRepository',
       useFactory: (dataSource: DataSource) => {
-        return new CiclistaRepositoryImpl(
-          dataSource.getRepository(CiclistaEntity),
+        return new TypeormCiclistaRepository(
+          dataSource.getRepository(TypeormCiclistaEntity),
         );
       },
       inject: [DataSource],

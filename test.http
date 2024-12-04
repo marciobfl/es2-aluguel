@@ -27,7 +27,10 @@ Content-Type: application/json
   }
 }
 ###
-GET {{baseurl}}/ciclista/existeEmail/use@example.com
+GET {{baseurl}}/ciclista/existeEmail/user@example.com
 
 ###
 POST {{baseurl}}/ciclista/1/ativar
+
+###
+GET {{baseurl}}/cartaoDeCredito/1

@@ -1,18 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import Passaporte from 'src/ciclista/domain/passaporte';
 
-@Entity('passaportes')
 export default class PassaporteEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-  @Column()
+  id?: number;
   numero: string;
-  @Column()
-  validade: Date;
-  @Column()
+  validade: string;
   pais: string;
 
-  static toDomain(passaporteEntity: PassaporteEntity): Passaporte {
+  static toDomain(passaporteEntity: PassaporteEntity) {
+    if (!passaporteEntity) {
+      return null;
+    }
+
     const passaporte = new Passaporte();
     passaporte.numero = passaporteEntity.numero;
     passaporte.validade = passaporteEntity.validade.toString();

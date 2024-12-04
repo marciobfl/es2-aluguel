@@ -1,15 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('cartoes-de-credito')
-export default class CartaoDeCreditoEntity {
+@Entity('passaportes')
+export default class TypeormPassaporteEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
   numero: string;
   @Column()
-  validade: Date;
+  validade: string;
   @Column()
-  cvv: string;
-  @Column()
-  nomeTitular: string;
+  pais: string;
 }

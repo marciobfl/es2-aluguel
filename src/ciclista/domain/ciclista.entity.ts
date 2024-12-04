@@ -1,49 +1,27 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import CartaoDeCreditoEntity from 'src/cartao-de-credito/infrastructure/typeorm/cartao-de-credito.entity';
+import CartaoDeCreditoEntity from 'src/cartao-de-credito/domain/cartao-de-credito.entity';
 import PassaporteEntity from './passaporte.entity';
 import { Ciclista, CiclistaStatus } from 'src/ciclista/domain/ciclista';
 
-@Entity('ciclistas')
 export default class CiclistaEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-  @Column()
+  id?: number;
   nome: string;
-  @Column()
-  nascimento: Date;
-  @Column()
+  nascimento: string;
   cpf: string;
-  @Column()
-  passaporteId: string;
-  @Column()
   nacionalidade: string;
-  @Column()
   email: string;
-  @Column()
   urlFotoDocumento: string;
-  @Column()
   senha: string;
-  @Column({
-    type: 'varchar',
-    default: CiclistaStatus.CONFIRMACAO_PENDENTE,
-  })
   status: CiclistaStatus;
-  @OneToOne(() => PassaporteEntity, {
-    cascade: true,
-  })
-  @JoinColumn()
   passaporte: PassaporteEntity;
-  @OneToOne(() => CartaoDeCreditoEntity, { cascade: true })
-  @JoinColumn()
+  passaporteId?: number;
   cartaoDeCredito: CartaoDeCreditoEntity;
+  cartaoDeCreditoId?: number;
 
-  static toDomain(ciclistaEntity: CiclistaEntity): Ciclista {
+  static toDomain(ciclistaEntity: CiclistaEntity) {
+    if (!ciclistaEntity) {
+      return null;
+    }
+
     const ciclista = new Ciclista();
     ciclista.id = ciclistaEntity.id;
     ciclista.status = ciclistaEntity.status;
