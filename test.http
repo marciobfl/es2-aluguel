@@ -34,3 +34,20 @@ POST {{baseurl}}/ciclista/1/ativar
 
 ###
 GET {{baseurl}}/cartaoDeCredito/1
+
+###
+POST {{baseurl}}/funcionario
+Content-Type: application/json
+
+{
+  "senha": "string",
+  "confirmacaoSenha": "string",
+  "email": "user@example.com",
+  "nome": "string",
+  "idade": 0,
+  "funcao": "string",
+  "cpf": "string"
+}
+
+###
+DELETE {{baseurl}}/funcionario/1

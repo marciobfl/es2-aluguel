@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import TypeormCartaoDeCreditoEntity from './infrastructure/typeorm/entities/typeorm-cartao-de-credito.entity';
-import { TypeormCartaoDeCreditoRepository } from './infrastructure/typeorm/repositories/typeorm-cartao-de-credito.repository';
+import TypeormCartaoDeCreditoEntity from './infra/typeorm/entities/typeorm-cartao-de-credito.entity';
+import { TypeormCartaoDeCreditoRepository } from './infra/typeorm/repositories/typeorm-cartao-de-credito.repository';
 import CartaoDeCreditoController from './cartao-de-credito.controller';
 import { CartaoDeCreditoService } from './cartao-de-credito.service';
 

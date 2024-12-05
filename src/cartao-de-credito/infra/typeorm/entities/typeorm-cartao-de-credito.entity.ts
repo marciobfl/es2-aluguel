@@ -1,4 +1,4 @@
-import TypeormCiclistaEntity from 'src/ciclista/infra/database/entities/typeorm-ciclista.entity';
+import TypeormCiclistaEntity from 'src/ciclista/infra/typeorm/entities/typeorm-ciclista.entity';
 import {
   Column,
   Entity,

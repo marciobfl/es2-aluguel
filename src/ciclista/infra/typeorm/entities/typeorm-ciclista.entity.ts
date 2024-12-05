@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { CiclistaStatus } from 'src/ciclista/domain/ciclista';
 import TypeormPassaporteEntity from './typeorm-passaporte.entity';
-import TypeormCartaoDeCreditoEntity from 'src/cartao-de-credito/infrastructure/typeorm/entities/typeorm-cartao-de-credito.entity';
+import TypeormCartaoDeCreditoEntity from 'src/cartao-de-credito/infra/typeorm/entities/typeorm-cartao-de-credito.entity';
 
 @Entity('ciclistas')
 export default class TypeormCiclistaEntity {
@@ -41,11 +41,7 @@ export default class TypeormCiclistaEntity {
   @Column({ nullable: true })
   @RelationId((ciclista: TypeormCiclistaEntity) => ciclista.passaporte)
   passaporteId: number;
-  @OneToOne(
-    () => TypeormCartaoDeCreditoEntity,
-    (cartaoDeCredito) => cartaoDeCredito.ciclista,
-    { cascade: true },
-  )
+  @OneToOne(() => TypeormCartaoDeCreditoEntity, { cascade: true })
   @JoinColumn()
   cartaoDeCredito: TypeormCartaoDeCreditoEntity;
   @Column({ nullable: true })
