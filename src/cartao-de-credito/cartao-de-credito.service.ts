@@ -12,7 +12,9 @@ export class CartaoDeCreditoService {
 
   async getCartaoDeCredito(ciclistaId: number) {
     const cartaoDeCredito = await this.cartaoDeCreditoRepository.findBy({
-      ciclistaId,
+      ciclista: {
+        id: ciclistaId,
+      },
     });
 
     if (!cartaoDeCredito) {
@@ -27,7 +29,9 @@ export class CartaoDeCreditoService {
     data: UpdateCartaoDeCreditoDto,
   ) {
     const cartaoDeCredito = await this.cartaoDeCreditoRepository.findBy({
-      ciclistaId,
+      ciclista: {
+        id: ciclistaId,
+      },
     });
 
     if (!cartaoDeCredito) {

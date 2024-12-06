@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { CartaoDeCreditoService } from './cartao-de-credito.service';
-import CartaoDeCredito from './domain/cartao-de-credito';
 import UpdateCartaoDeCreditoDto from './dto/update-cartao-de-credito.dto';
 
 @Controller('cartaoDeCredito')
