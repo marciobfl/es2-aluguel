@@ -1,3 +1,4 @@
+import CiclistaEntity from 'src/ciclista/domain/ciclista.entity';
 import CartaoDeCredito from './cartao-de-credito';
 
 export default class CartaoDeCreditoEntity {
@@ -6,7 +7,7 @@ export default class CartaoDeCreditoEntity {
   validade: string;
   cvv: string;
   nomeTitular: string;
-  ciclistaId?: number;
+  ciclista?: CiclistaEntity;
 
   static toDomain(cartaoDeCreditoEntity: CartaoDeCreditoEntity) {
     if (!cartaoDeCreditoEntity) {

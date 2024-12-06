@@ -13,9 +13,7 @@ export default class CiclistaEntity {
   senha: string;
   status: CiclistaStatus;
   passaporte: PassaporteEntity;
-  passaporteId?: number;
   cartaoDeCredito: CartaoDeCreditoEntity;
-  cartaoDeCreditoId?: number;
 
   static toDomain(ciclistaEntity: CiclistaEntity) {
     if (!ciclistaEntity) {

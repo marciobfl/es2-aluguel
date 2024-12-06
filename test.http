@@ -36,6 +36,17 @@ POST {{baseurl}}/ciclista/1/ativar
 GET {{baseurl}}/cartaoDeCredito/1
 
 ###
+PUT {{baseurl}}/cartaoDeCredito/1
+Content-Type: application/json
+
+{
+  "nomeTitular": "João Guilherme",
+  "numero": "1234123412341234",
+  "validade": "2024-11-30",
+  "cvv": "1270"
+}
+
+###
 POST {{baseurl}}/funcionario
 Content-Type: application/json
 

@@ -38,10 +38,6 @@ export class CartaoDeCreditoService {
       throw new Error('Cartão de crédito não existe!\n');
     }
 
-    await this.cartaoDeCreditoRepository.update({
-      ciclistaId,
-      ...data,
-      id: cartaoDeCredito.id,
-    });
+    await this.cartaoDeCreditoRepository.update(cartaoDeCredito.id, data);
   }
 }
