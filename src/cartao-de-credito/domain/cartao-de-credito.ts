@@ -1,5 +1,5 @@
 export default class CartaoDeCredito {
-  id: number;
+  id?: number;
   numero: string;
   validade: string;
   cvv: string;
