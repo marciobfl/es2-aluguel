@@ -5,9 +5,11 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import CreateFuncionarioDto from './dto/create-funcionario.dto';
 import { FuncionarioService } from './funcionario.service';
+import UpdateFuncionarioDto from './dto/update-funcionario.dto';
 
 @Controller('funcionario')
 export default class FuncionarioController {
@@ -23,5 +25,13 @@ export default class FuncionarioController {
     @Param('idFuncionario', ParseIntPipe) idFuncionario: number,
   ) {
     await this.funcionarioService.deleteFuncionario({ id: idFuncionario });
+  }
+
+  @Put(':idFuncionario')
+  updateFuncionario(
+    @Param('idFuncionario') idFuncionario: number,
+    @Body() data: UpdateFuncionarioDto,
+  ) {
+    return this.funcionarioService.updateFuncionario(idFuncionario, data);
   }
 }

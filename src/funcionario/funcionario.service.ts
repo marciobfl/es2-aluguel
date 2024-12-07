@@ -3,6 +3,7 @@ import CreateFuncionarioDto from './dto/create-funcionario.dto';
 import { FuncionarioRepository } from './domain/funcionario.repository';
 import FuncionarioEntity from './domain/funcionario.entity';
 import DeleteFuncionarioDto from './dto/delete-funcionario.dto';
+import UpdateFuncionarioDto from './dto/update-funcionario.dto';
 
 @Injectable()
 export class FuncionarioService {
@@ -40,6 +41,18 @@ export class FuncionarioService {
     }
 
     await this.funcionarioRepository.delete(deleteFuncionarioDto.id);
+  }
+
+  async updateFuncionario(funcionarioId: number, data: UpdateFuncionarioDto) {
+    const funcionario = await this.funcionarioRepository.findBy({
+      id: funcionarioId,
+    });
+
+    if (!funcionario) {
+      throw new Error('Funcionário não cadastrado!\n');
+    }
+
+    await this.funcionarioRepository.update({ ...data, id: funcionario.id });
   }
 
   generateMatricula() {
