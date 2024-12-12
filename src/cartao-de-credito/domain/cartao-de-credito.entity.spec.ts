@@ -4,10 +4,10 @@ describe('CartaoDeCreditoEntity.toDomain', () => {
   it('deve retornar um objeto CartaoDeCredito corretamente mapeado', () => {
     const cartaoDeCreditoEntityMock: CartaoDeCreditoEntity = {
       id: 1,
-      numero: '4111111111111111',
+      numero: '5284 2540 4664 6997',
       validade: '12/25',
       cvv: '123',
-      nomeTitular: 'João Silva',
+      nomeTitular: 'Jose das Couves',
       ciclista: undefined,
     };
 

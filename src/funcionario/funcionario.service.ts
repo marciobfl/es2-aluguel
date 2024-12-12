@@ -4,6 +4,7 @@ import { FuncionarioRepository } from './domain/funcionario.repository';
 import FuncionarioEntity from './domain/funcionario.entity';
 import DeleteFuncionarioDto from './dto/delete-funcionario.dto';
 import UpdateFuncionarioDto from './dto/update-funcionario.dto';
+import { AppError, AppErrorType } from 'src/common/domain/app-error';
 
 @Injectable()
 export class FuncionarioService {
@@ -18,7 +19,10 @@ export class FuncionarioService {
     });
 
     if (funcionarioAlreadyExists) {
-      throw new Error('Funcionário já cadastrado!\n');
+      throw new AppError(
+        'Funcionário já cadastrado!\n',
+        AppErrorType.RESOURCE_CONFLICT,
+      );
     }
 
     const funcionarioMatricula = this.generateMatricula();
@@ -37,22 +41,42 @@ export class FuncionarioService {
     });
 
     if (!funcionarioAlreadyExists) {
-      throw new Error('Funcionário não cadastrado!\n');
+      throw new AppError(
+        'Funcionário não cadastrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
     }
 
     await this.funcionarioRepository.delete(deleteFuncionarioDto.id);
   }
 
-  async updateFuncionario(funcionarioId: number, data: UpdateFuncionarioDto) {
+  async updateFuncionario(idFuncionario: number, data: UpdateFuncionarioDto) {
     const funcionario = await this.funcionarioRepository.findBy({
-      id: funcionarioId,
+      id: idFuncionario,
     });
 
     if (!funcionario) {
-      throw new Error('Funcionário não cadastrado!\n');
+      throw new AppError(
+        'Funcionário não cadastrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
     }
 
     await this.funcionarioRepository.update({ ...data, id: funcionario.id });
+  }
+
+  async findAll() {
+    const funcionarios = await this.funcionarioRepository.findAll();
+    return funcionarios.map((funcionario) =>
+      FuncionarioEntity.toDomain(funcionario),
+    );
+  }
+
+  async findBy(idFuncionario: number) {
+    const funcionarios = await this.funcionarioRepository.findBy({
+      id: idFuncionario,
+    });
+    return FuncionarioEntity.toDomain(funcionarios);
   }
 
   generateMatricula() {

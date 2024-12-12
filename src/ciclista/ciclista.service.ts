@@ -3,6 +3,7 @@ import { CiclistaRepository } from './domain/ciclista.repository';
 import CreateCiclistaDto from './dto/create-ciclista.dto';
 import CiclistaEntity from './domain/ciclista.entity';
 import { CiclistaStatus } from './domain/ciclista';
+import { AppError, AppErrorType } from 'src/common/domain/app-error';
 
 @Injectable()
 export class CiclistaService {
@@ -18,7 +19,10 @@ export class CiclistaService {
     });
 
     if (ciclistaAlreadyExists) {
-      throw new Error('Ciclista já cadastrado!\n');
+      throw new AppError(
+        'Ciclista já cadastrado!\n',
+        AppErrorType.RESOURCE_CONFLICT,
+      );
     }
 
     const newCiclista = await this.ciclistaRepository.save({
@@ -41,11 +45,17 @@ export class CiclistaService {
     });
 
     if (!ciclista) {
-      throw new Error('Ciclista não encontrado!\n');
+      throw new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
     }
 
     if (ciclista.status == CiclistaStatus.ATIVADO) {
-      throw new Error('Ciclista já foi ativado!\n');
+      throw new AppError(
+        'Ciclista já cadastrado!\n',
+        AppErrorType.RESOURCE_CONFLICT,
+      );
     }
 
     ciclista.status = CiclistaStatus.ATIVADO;

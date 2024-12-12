@@ -2,44 +2,46 @@ import CiclistaEntity from 'src/ciclista/domain/ciclista.entity';
 import PassaporteEntity from 'src/ciclista/domain/passaporte.entity';
 import { CiclistaStatus } from 'src/ciclista/domain/ciclista';
 
-describe('CiclistaEntity.toDomain', () => {
-  it('deve retornar um objeto Ciclista corretamente mapeado', () => {
-    const passaporteMock: PassaporteEntity = {
+describe('CiclistaEntity', () => {
+  describe('toDomain', () => {
+    const passaporte: PassaporteEntity = {
       numero: '12345678',
       pais: 'Brasil',
       validade: '11/07',
     };
 
-    const ciclistaEntityMock: CiclistaEntity = {
-      id: 1,
-      nome: 'João Silva',
-      nascimento: '1990-01-01',
-      cpf: '123.456.789-00',
-      nacionalidade: 'Brasileiro',
-      email: 'joao@example.com',
-      urlFotoDocumento: 'http://example.com/documento.jpg',
-      senha: 'senhaSegura123',
-      status: CiclistaStatus.CONFIRMACAO_PENDENTE,
-      passaporte: passaporteMock,
-      cartaoDeCredito: null,
-    };
+    it('should map a ciclistaEntity to Ciclista object', () => {
+      const ciclistaEntity = new CiclistaEntity();
+      ciclistaEntity.id = 1;
+      ciclistaEntity.nome = 'Jose das Couves';
+      ciclistaEntity.nascimento = '1990-01-01';
+      ciclistaEntity.cpf = '123.456.789-00';
+      ciclistaEntity.email = 'user@example.com';
+      ciclistaEntity.urlFotoDocumento = 'http://example.com/documento.jpg';
+      ciclistaEntity.senha = 'password1234';
+      ciclistaEntity.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      ciclistaEntity.passaporte = passaporte;
+      ciclistaEntity.cartaoDeCredito = null;
 
-    const ciclistaDomain = CiclistaEntity.toDomain(ciclistaEntityMock);
-    expect(ciclistaDomain).toEqual({
-      id: ciclistaEntityMock.id,
-      nome: ciclistaEntityMock.nome,
-      nascimento: ciclistaEntityMock.nascimento,
-      cpf: ciclistaEntityMock.cpf,
-      nacionalidade: ciclistaEntityMock.nacionalidade,
-      email: ciclistaEntityMock.email,
-      urlFotoDocumento: ciclistaEntityMock.urlFotoDocumento,
-      status: CiclistaStatus.CONFIRMACAO_PENDENTE,
-      passaporte: passaporteMock,
+      const ciclistaDomain = CiclistaEntity.toDomain(ciclistaEntity);
+
+      expect(ciclistaDomain.id).toBe(ciclistaEntity.id);
+      expect(ciclistaDomain.nome).toBe(ciclistaEntity.nome);
+      expect(ciclistaDomain.nascimento).toBe(ciclistaEntity.nascimento);
+      expect(ciclistaDomain.cpf).toBe(ciclistaEntity.cpf);
+      expect(ciclistaDomain.email).toBe(ciclistaEntity.email);
+      expect(ciclistaDomain.urlFotoDocumento).toBe(
+        ciclistaEntity.urlFotoDocumento,
+      );
+      expect(ciclistaDomain.status).toBe(ciclistaEntity.status);
+      expect(ciclistaDomain.passaporte).toEqual(ciclistaEntity.passaporte);
     });
-  });
 
-  it('deve retornar null quando o parâmetro for null', () => {
-    const result = CiclistaEntity.toDomain(null);
-    expect(result).toBeNull();
+    it('must return null when the parameter is null', () => {
+      const ciclistaEntity = null;
+      const ciclistaDomain = CiclistaEntity.toDomain(ciclistaEntity);
+
+      expect(ciclistaDomain).toBeNull();
+    });
   });
 });

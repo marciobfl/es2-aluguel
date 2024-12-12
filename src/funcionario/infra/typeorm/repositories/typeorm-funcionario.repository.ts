@@ -21,6 +21,10 @@ export class TypeormFuncionarioRepository implements FuncionarioRepository {
       where: query,
     });
   }
+  async findAll(): Promise<FuncionarioEntity[]> {
+    const funcionarios = await this.funcionarioDatabase.find({});
+    return funcionarios;
+  }
   save(funcionario: FuncionarioEntity): Promise<FuncionarioEntity> {
     return this.funcionarioDatabase.save(funcionario);
   }

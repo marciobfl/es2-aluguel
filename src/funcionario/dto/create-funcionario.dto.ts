@@ -1,27 +1,27 @@
-import { IsEmpty, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { FuncionarioFuncao } from '../domain/funcionario';
 
 export default class CreateFuncionarioDto {
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   nome: string;
   @IsNumber()
-  @IsEmpty()
+  @IsNotEmpty()
   idade: number;
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   email: string;
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   cpf: string;
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   @IsEnum(FuncionarioFuncao)
   funcao: FuncionarioFuncao;
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   senha: string;
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   confirmacaoSenha: string;
 }

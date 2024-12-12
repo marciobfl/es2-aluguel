@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CartaoDeCreditoRepository } from './domain/cartao-de-credito.repository';
 import CartaoDeCreditoEntity from './domain/cartao-de-credito.entity';
 import UpdateCartaoDeCreditoDto from './dto/update-cartao-de-credito.dto';
+import { AppError, AppErrorType } from 'src/common/domain/app-error';
 
 @Injectable()
 export class CartaoDeCreditoService {
@@ -18,7 +19,10 @@ export class CartaoDeCreditoService {
     });
 
     if (!cartaoDeCredito) {
-      throw new Error('Cartão de crédito não existe!\n');
+      throw new AppError(
+        'Cartão não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
     }
 
     return CartaoDeCreditoEntity.toDomain(cartaoDeCredito);
@@ -35,7 +39,10 @@ export class CartaoDeCreditoService {
     });
 
     if (!cartaoDeCredito) {
-      throw new Error('Cartão de crédito não existe!\n');
+      throw new AppError(
+        'Cartão não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
     }
 
     await this.cartaoDeCreditoRepository.update(cartaoDeCredito.id, data);

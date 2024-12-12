@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -33,5 +34,15 @@ export default class FuncionarioController {
     @Body() data: UpdateFuncionarioDto,
   ) {
     return this.funcionarioService.updateFuncionario(idFuncionario, data);
+  }
+
+  @Get('/')
+  async findAll() {
+    return this.funcionarioService.findAll();
+  }
+
+  @Get(':idFuncionario')
+  async findBy(@Param('idFuncionario') idFuncionario: number) {
+    return this.funcionarioService.findBy(idFuncionario);
   }
 }

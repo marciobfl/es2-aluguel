@@ -10,4 +10,5 @@ export interface FuncionarioRepository {
   ): Promise<void>;
   delete(funcionarioId: number): Promise<void>;
   findBy(query: ExistsFuncionario): Promise<FuncionarioEntity>;
+  findAll(): Promise<FuncionarioEntity[]>;
 }
