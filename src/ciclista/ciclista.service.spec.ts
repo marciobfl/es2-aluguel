@@ -95,6 +95,16 @@ describe('CiclistaService', () => {
     await expect(ciclistaService.emailExists(email)).resolves.toBe(true);
     expect(mockRepository.findBy).toHaveBeenCalledWith({ email });
   });
+  it('should throw an error if the ciclista status is already ativado', async () => {
+    const id = ciclista.id;
+    jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
+    ciclista.status = CiclistaStatus.ATIVADO;
+    jest.spyOn(mockRepository, 'save').mockResolvedValue(ciclista);
+    await expect(ciclistaService.activateCiclista(id)).rejects.toThrow(
+      'Ciclista já cadastrado!\n',
+    );
+    expect(mockRepository.save).not.toHaveBeenCalled();
+  });
   it('should return false if the email does not exist', async () => {
     const email = 'nonexistent@example.com';
     jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null);
