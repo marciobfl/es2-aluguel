@@ -57,9 +57,9 @@ describe('CartaoDeCreditoService', () => {
   });
 
   it('should throw error if cartao de credito not found', async () => {
-    jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null); // Nenhum cartão encontrado
+    jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null);
 
-    await expect(service.getCartaoDeCredito(ciclistaId)).rejects.toThrowError(
+    await expect(service.getCartaoDeCredito(ciclistaId)).rejects.toThrow(
       new AppError('Cartão não encontrado!\n', AppErrorType.RESOURCE_NOT_FOUND),
     );
   });
@@ -67,8 +67,8 @@ describe('CartaoDeCreditoService', () => {
   it('should update cartao de credito successfully', async () => {
     jest
       .spyOn(mockRepository, 'findBy')
-      .mockResolvedValue(cartaoDeCreditoEntity); // Cartão encontrado
-    jest.spyOn(mockRepository, 'update').mockResolvedValue(undefined); // Atualiza o cartão com sucesso
+      .mockResolvedValue(cartaoDeCreditoEntity);
+    jest.spyOn(mockRepository, 'update').mockResolvedValue(undefined);
 
     await expect(
       service.updateCartaoDeCredito(ciclistaId, updateData),
@@ -81,11 +81,11 @@ describe('CartaoDeCreditoService', () => {
   });
 
   it('should throw error if cartao de credito not found for update', async () => {
-    jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null); // Nenhum cartão encontrado
+    jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null);
 
     await expect(
       service.updateCartaoDeCredito(ciclistaId, updateData),
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       new AppError('Cartão não encontrado!\n', AppErrorType.RESOURCE_NOT_FOUND),
     );
   });
