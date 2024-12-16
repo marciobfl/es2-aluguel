@@ -28,7 +28,6 @@ describe('CiclistaController', () => {
       numero: '4111111111111111',
       validade: '2030-01',
       cvv: '123',
-      id: 0,
     },
   };
 

@@ -57,7 +57,6 @@ describe('CreateCiclistaDto', () => {
   });
 
   it('deve conter as informações corretas do meio de pagamento', () => {
-    expect(createCiclistaDto.meioDePagamento.id).toBe(1);
     expect(createCiclistaDto.meioDePagamento.numero).toBe('4111111111111111');
     expect(createCiclistaDto.meioDePagamento.validade).toBe('2030-12');
     expect(createCiclistaDto.meioDePagamento.cvv).toBe('123');

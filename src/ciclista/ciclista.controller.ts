@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { CiclistaService } from './ciclista.service';
 import CreateCiclistaDto from './dto/create-ciclista.dto';
+import UpdateCiclistaDto from './dto/update-ciclista.dto';
 
 @Controller('ciclista')
 export default class CiclistaController {
@@ -19,5 +20,13 @@ export default class CiclistaController {
   @Post('/:idCiclista/ativar')
   activateCiclista(@Param('idCiclista') idCiclista: number) {
     return this.ciclistaService.activateCiclista(idCiclista);
+  }
+
+  @Put('/:idCiclista')
+  updateCiclista(
+    @Param('idCiclista') idCiclista: number,
+    @Body() updateCiclistaDto: UpdateCiclistaDto,
+  ) {
+    return this.ciclistaService.updateCiclista(idCiclista, updateCiclistaDto);
   }
 }

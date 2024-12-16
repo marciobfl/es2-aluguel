@@ -1,16 +1,14 @@
-import CartaoDeCredito from 'src/cartao-de-credito/domain/cartao-de-credito';
-import Passaporte from '../domain/passaporte';
+import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CiclistaDto } from './ciclista.dto';
+import CartaoDeCreditoDto from 'src/cartao-de-credito/dto/cartao-de-credito.dto';
 
 export default class CreateCiclistaDto {
-  ciclista: {
-    nome: string;
-    cpf: string;
-    nacionalidade: string;
-    nascimento: string;
-    email: string;
-    urlFotoDocumento: string;
-    passaporte: Passaporte;
-    senha: string;
-  };
-  meioDePagamento: CartaoDeCredito;
+  @ValidateNested()
+  @Type(() => CiclistaDto)
+  ciclista: CiclistaDto;
+
+  @ValidateNested()
+  @Type(() => CartaoDeCreditoDto)
+  meioDePagamento: CartaoDeCreditoDto;
 }

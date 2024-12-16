@@ -6,10 +6,14 @@ import CreateCiclistaDto from './dto/create-ciclista.dto';
 import TypeormCiclistaEntity from './infra/typeorm/entities/typeorm-ciclista.entity';
 import TypeormCartaoDeCreditoEntity from 'src/cartao-de-credito/infra/typeorm/entities/typeorm-cartao-de-credito.entity';
 import CiclistaEntity from './domain/ciclista.entity';
+import { EmailService } from 'src/common/utils/email.service';
 
 describe('CiclistaService', () => {
   let ciclistaService: CiclistaService;
   let mockRepository: CiclistaRepository;
+  const mockEmailService = {
+    sendEmail: jest.fn(),
+  };
 
   const createCiclista: CreateCiclistaDto = {
     ciclista: {
@@ -31,7 +35,6 @@ describe('CiclistaService', () => {
       numero: '5284 2540 4664 6997',
       validade: '12/25',
       cvv: '123',
-      id: 0,
     },
   };
   let ciclista: TypeormCiclistaEntity;
@@ -71,6 +74,7 @@ describe('CiclistaService', () => {
           provide: 'CiclistaRepository',
           useValue: mockRepository,
         },
+        { provide: EmailService, useValue: mockEmailService },
       ],
     }).compile();
     ciclistaService = module.get(CiclistaService);

@@ -2,16 +2,24 @@ import CiclistaEntity from 'src/ciclista/domain/ciclista.entity';
 import {
   CiclistaRepository,
   ExistsCiclista,
+  UpdateCiclista,
 } from 'src/ciclista/domain/ciclista.repository';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import TypeormCiclistaEntity from '../entities/typeorm-ciclista.entity';
+import { CiclistaStatus } from 'src/ciclista/domain/ciclista';
 
 export class TypeormCiclistaRepository implements CiclistaRepository {
   constructor(
     private readonly ciclistaDatabase: Repository<TypeormCiclistaEntity>,
   ) {}
-  async update(data: MakeRequired<CiclistaEntity, 'id'>): Promise<void> {
-    await this.ciclistaDatabase.update(data.id, data);
+  async update(id: number, data: UpdateCiclista): Promise<CiclistaEntity> {
+    await this.ciclistaDatabase.update(id, data);
+    return this.ciclistaDatabase.findOne({
+      where: {
+        id: id,
+        status: Not(CiclistaStatus.CONFIRMACAO_PENDENTE),
+      },
+    });
   }
   findBy(query: ExistsCiclista): Promise<CiclistaEntity> {
     return this.ciclistaDatabase.findOne({

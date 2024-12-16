@@ -46,12 +46,27 @@ describe('TypeormCiclistaRepository', () => {
         cartaoDeCredito: null,
       };
 
-      jest.spyOn(ciclistaDatabase, 'update').mockResolvedValue(undefined);
-      await repository.update(ciclista);
+      jest
+        .spyOn(ciclistaDatabase, 'update')
+        .mockResolvedValue({ affected: 1 } as any);
+
+      jest.spyOn(ciclistaDatabase, 'findOne').mockResolvedValue(ciclista);
+
+      const result = await repository.update(ciclista.id, ciclista);
+
       expect(ciclistaDatabase.update).toHaveBeenCalledWith(
         ciclista.id,
         ciclista,
       );
+
+      expect(ciclistaDatabase.findOne).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            id: ciclista.id,
+          }),
+        }),
+      );
+      expect(result).toEqual(ciclista);
     });
   });
 
@@ -75,6 +90,7 @@ describe('TypeormCiclistaRepository', () => {
       jest.spyOn(ciclistaDatabase, 'findOne').mockResolvedValue(expectedResult);
 
       const result = await repository.findBy(query);
+
       expect(ciclistaDatabase.findOne).toHaveBeenCalledWith({
         where: query,
         relations: { cartaoDeCredito: true, passaporte: true },
