@@ -62,7 +62,7 @@ export class CiclistaService {
 
     if (ciclista.status == CiclistaStatus.ATIVADO) {
       throw new AppError(
-        'Ciclista já cadastrado!\n',
+        'Ciclista já ativado!\n',
         AppErrorType.RESOURCE_CONFLICT,
       );
     }

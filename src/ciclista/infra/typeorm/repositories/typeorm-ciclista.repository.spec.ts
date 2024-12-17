@@ -88,13 +88,9 @@ describe('TypeormCiclistaRepository', () => {
       };
 
       jest.spyOn(ciclistaDatabase, 'findOne').mockResolvedValue(expectedResult);
-
       const result = await repository.findBy(query);
 
-      expect(ciclistaDatabase.findOne).toHaveBeenCalledWith({
-        where: query,
-        relations: { cartaoDeCredito: true, passaporte: true },
-      });
+      expect(ciclistaDatabase.findOne).toHaveBeenCalledWith({ where: query });
       expect(result).toEqual(expectedResult);
     });
   });

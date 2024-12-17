@@ -6,11 +6,11 @@ export class EmailService {
     if (!to || !subject || !body) {
       throw new Error('Todos os campos são obrigatórios.');
     }
-    // console.log(
-    //   `Envio de email para: ${to},
-    //    Assunto: ${subject},
-    //    Corpo: ${body}`,
-    // );
+    console.log(
+      `Envio de email para: ${to},
+       Assunto: ${subject},
+       Corpo: ${body}`,
+    );
     return 'sucesso';
   }
 }

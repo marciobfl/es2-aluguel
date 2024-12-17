@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import PassaporteDto from './passaporte.dto';
 
 export class CiclistaDto {
@@ -20,6 +20,9 @@ export class CiclistaDto {
   @IsNotEmpty()
   @IsString()
   urlFotoDocumento: string;
+  @ValidateIf(
+    (o: CiclistaDto) => o.nacionalidade.toUpperCase() !== 'BRASILEIRO',
+  )
   @IsNotEmpty()
   passaporte: PassaporteDto;
   @IsNotEmpty()

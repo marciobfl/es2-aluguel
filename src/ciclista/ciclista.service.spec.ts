@@ -50,7 +50,6 @@ describe('CiclistaService', () => {
         numero: 'P1234567',
         validade: '2030-01-01',
         pais: 'BR',
-        id: 1,
       },
       nacionalidade: 'Brasileiro',
       email: 'user@example.com',
@@ -105,7 +104,7 @@ describe('CiclistaService', () => {
     ciclista.status = CiclistaStatus.ATIVADO;
     jest.spyOn(mockRepository, 'save').mockResolvedValue(ciclista);
     await expect(ciclistaService.activateCiclista(id)).rejects.toThrow(
-      'Ciclista já cadastrado!\n',
+      'Ciclista já ativado!\n',
     );
     expect(mockRepository.save).not.toHaveBeenCalled();
   });

@@ -4,8 +4,8 @@ import {
   ExistsCiclista,
   UpdateCiclista,
 } from 'src/ciclista/domain/ciclista.repository';
-import { Not, Repository } from 'typeorm';
 import TypeormCiclistaEntity from '../entities/typeorm-ciclista.entity';
+import { Not, Repository } from 'typeorm';
 import { CiclistaStatus } from 'src/ciclista/domain/ciclista';
 
 export class TypeormCiclistaRepository implements CiclistaRepository {
@@ -19,13 +19,11 @@ export class TypeormCiclistaRepository implements CiclistaRepository {
         id: id,
         status: Not(CiclistaStatus.CONFIRMACAO_PENDENTE),
       },
-      relations: { passaporte: true },
     });
   }
   findBy(query: ExistsCiclista): Promise<CiclistaEntity> {
     return this.ciclistaDatabase.findOne({
       where: query,
-      relations: { cartaoDeCredito: true, passaporte: true },
     });
   }
   save(ciclista: CiclistaEntity): Promise<CiclistaEntity> {

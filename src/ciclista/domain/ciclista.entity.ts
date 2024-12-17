@@ -1,6 +1,6 @@
 import CartaoDeCreditoEntity from 'src/cartao-de-credito/domain/cartao-de-credito.entity';
-import PassaporteEntity from './passaporte.entity';
 import { Ciclista, CiclistaStatus } from 'src/ciclista/domain/ciclista';
+import Passaporte from './passaporte';
 
 export default class CiclistaEntity {
   id?: number;
@@ -12,7 +12,7 @@ export default class CiclistaEntity {
   urlFotoDocumento: string;
   senha: string;
   status: CiclistaStatus;
-  passaporte: PassaporteEntity;
+  passaporte: Passaporte;
   cartaoDeCredito: CartaoDeCreditoEntity;
 
   static toDomain(ciclistaEntity: CiclistaEntity) {
@@ -29,7 +29,7 @@ export default class CiclistaEntity {
     ciclista.email = ciclistaEntity.email;
     ciclista.urlFotoDocumento = ciclistaEntity.urlFotoDocumento;
     ciclista.nascimento = ciclistaEntity.nascimento.toString();
-    ciclista.passaporte = PassaporteEntity.toDomain(ciclistaEntity.passaporte);
+    ciclista.passaporte = ciclistaEntity.passaporte;
 
     return ciclista;
   }

@@ -1,10 +1,10 @@
 import CiclistaEntity from 'src/ciclista/domain/ciclista.entity';
-import PassaporteEntity from 'src/ciclista/domain/passaporte.entity';
 import { CiclistaStatus } from 'src/ciclista/domain/ciclista';
+import Passaporte from './passaporte';
 
 describe('CiclistaEntity', () => {
   describe('toDomain', () => {
-    const passaporte: PassaporteEntity = {
+    const passaporte: Passaporte = {
       numero: '12345678',
       pais: 'Brasil',
       validade: '11/07',
