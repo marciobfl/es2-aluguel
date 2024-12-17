@@ -19,6 +19,7 @@ export class TypeormCiclistaRepository implements CiclistaRepository {
         id: id,
         status: Not(CiclistaStatus.CONFIRMACAO_PENDENTE),
       },
+      relations: { passaporte: true },
     });
   }
   findBy(query: ExistsCiclista): Promise<CiclistaEntity> {

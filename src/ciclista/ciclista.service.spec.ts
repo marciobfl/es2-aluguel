@@ -134,4 +134,11 @@ describe('CiclistaService', () => {
     );
     expect(mockRepository.save).not.toHaveBeenCalled();
   });
+  it('should return the employee by id', async () => {
+    jest.spyOn(mockRepository, 'findBy').mockResolvedValueOnce(ciclista);
+    await expect(ciclistaService.findBy(1)).resolves.toStrictEqual(
+      ciclistaDomain,
+    );
+    expect(mockRepository.findBy).toHaveBeenCalled();
+  });
 });

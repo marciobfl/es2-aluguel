@@ -99,4 +99,11 @@ export class CiclistaService {
 
     return CiclistaEntity.toDomain(updatedCiclista);
   }
+
+  async findBy(idCiclista: number) {
+    const ciclistaidCiclistas = await this.ciclistaRepository.findBy({
+      id: idCiclista,
+    });
+    return CiclistaEntity.toDomain(ciclistaidCiclistas);
+  }
 }

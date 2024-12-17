@@ -29,4 +29,9 @@ export default class CiclistaController {
   ) {
     return this.ciclistaService.updateCiclista(idCiclista, updateCiclistaDto);
   }
+
+  @Get(':idCiclista')
+  async findBy(@Param('idCiclista') idCiclista: number) {
+    return this.ciclistaService.findBy(idCiclista);
+  }
 }
