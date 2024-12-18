@@ -34,4 +34,14 @@ export default class CiclistaController {
   async findBy(@Param('idCiclista') idCiclista: number) {
     return this.ciclistaService.findBy(idCiclista);
   }
+
+  @Get('/:idCiclista/permiteAluguel')
+  async allowAluguel(@Param('idCiclista') idCiclista: number) {
+    return this.ciclistaService.allowAluguel(idCiclista);
+  }
+
+  @Get('/:idCiclista/bicicletaAlugada')
+  async rentedBicicleta(@Param('idCiclista') idCiclista: number) {
+    return this.ciclistaService.rentedBicicleta(idCiclista);
+  }
 }

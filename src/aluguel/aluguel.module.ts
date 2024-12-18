@@ -6,18 +6,32 @@ import TypeormAluguelEntity from './infra/typeorm/entities/typeorm-aluguel.entit
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeormCiclistaEntity from 'src/ciclista/infra/typeorm/entities/typeorm-ciclista.entity';
+import { EquipamentoService } from 'src/common/external/equipamento.service';
+import { ExternoService } from 'src/common/external/externo.service';
+import { TypeormCiclistaRepository } from 'src/ciclista/infra/typeorm/repositories/typeorm-ciclista.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeormCiclistaEntity])],
   controllers: [AluguelController],
   providers: [
     AluguelService,
+    EquipamentoService,
+    ExternoService,
     {
       provide: 'AluguelRepository',
       inject: [DataSource],
       useFactory: (dataSource: DataSource) => {
         return new TypeormAluguelRepository(
           dataSource.getRepository(TypeormAluguelEntity),
+        );
+      },
+    },
+    {
+      provide: 'CiclistaRepository',
+      inject: [DataSource],
+      useFactory: (dataSource: DataSource) => {
+        return new TypeormCiclistaRepository(
+          dataSource.getRepository(TypeormCiclistaEntity),
         );
       },
     },

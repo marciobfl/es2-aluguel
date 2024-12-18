@@ -73,10 +73,17 @@ export class FuncionarioService {
   }
 
   async findBy(idFuncionario: number) {
-    const funcionarios = await this.funcionarioRepository.findBy({
+    const funcionario = await this.funcionarioRepository.findBy({
       id: idFuncionario,
     });
-    return FuncionarioEntity.toDomain(funcionarios);
+
+    if (!funcionario) {
+      throw new AppError(
+        'Funcionário não cadastrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
+    }
+    return FuncionarioEntity.toDomain(funcionario);
   }
 
   generateMatricula() {

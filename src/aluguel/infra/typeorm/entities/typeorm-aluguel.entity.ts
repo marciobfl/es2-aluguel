@@ -7,8 +7,10 @@ export default class TypeormAluguelEntity {
   @Column()
   bicicleta: number;
   @Column()
-  horaInicio: string;
-  @Column()
+  horaInicio: Date;
+  @Column({ nullable: true })
+  horaFim: Date;
+  @Column({ nullable: true })
   trancaFim: number;
   @Column()
   cobranca: number;

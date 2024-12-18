@@ -4,15 +4,20 @@ import CreateCiclistaDto from './dto/create-ciclista.dto';
 import CiclistaEntity from './domain/ciclista.entity';
 import { CiclistaStatus } from './domain/ciclista';
 import { AppError, AppErrorType } from 'src/common/domain/app-error';
-import { EmailService } from 'src/common/utils/email.service';
 import UpdateCiclistaDto from './dto/update-ciclista.dto';
+import { ExternoService } from 'src/common/external/externo.service';
+import { AluguelRepository } from 'src/aluguel/domain/aluguel.repository';
+import { EquipamentoService } from 'src/common/external/equipamento.service';
 
 @Injectable()
 export class CiclistaService {
   constructor(
     @Inject('CiclistaRepository')
     private readonly ciclistaRepository: CiclistaRepository,
-    private readonly emailService: EmailService,
+    @Inject('AluguelRepository')
+    private readonly aluguelRepository: AluguelRepository,
+    private readonly externoService: ExternoService,
+    private readonly equipamentoService: EquipamentoService,
   ) {}
 
   async createCiclista(createCiclistaDto: CreateCiclistaDto) {
@@ -28,7 +33,7 @@ export class CiclistaService {
       );
     }
 
-    await this.emailService.sendEmail(
+    await this.externoService.sendEmail(
       ciclista.email,
       'Vá de Bicicleta - Confirme seu cadastro',
       'Cadastro realizado com sucesso! Agora, ative seu perfil.',
@@ -105,5 +110,61 @@ export class CiclistaService {
       id: idCiclista,
     });
     return CiclistaEntity.toDomain(ciclistaidCiclistas);
+  }
+
+  async allowAluguel(idCiclista: number) {
+    const ciclista = await this.ciclistaRepository.findBy({ id: idCiclista });
+
+    if (!ciclista) {
+      throw new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
+    }
+
+    if (ciclista.status != CiclistaStatus.ATIVADO) {
+      throw new AppError(
+        'Ciclista não ativado!\n',
+        AppErrorType.RESOURCE_CONFLICT,
+      );
+    }
+
+    const aluguel = await this.aluguelRepository.findBy({
+      ciclista: idCiclista,
+    });
+
+    if (aluguel && aluguel.trancaFim == 0 && !aluguel.horaFim) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async rentedBicicleta(idCiclista: number) {
+    const ciclista = await this.ciclistaRepository.findBy({ id: idCiclista });
+
+    if (!ciclista) {
+      throw new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
+    }
+
+    if (ciclista.status != CiclistaStatus.ATIVADO) {
+      throw new AppError(
+        'Ciclista não ativado!\n',
+        AppErrorType.RESOURCE_CONFLICT,
+      );
+    }
+
+    const aluguel = await this.aluguelRepository.findBy({
+      ciclista: idCiclista,
+    });
+
+    if (!aluguel) {
+      return {};
+    }
+
+    return this.equipamentoService.getBicicletaById(aluguel.bicicleta);
   }
 }

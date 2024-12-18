@@ -1,5 +1,6 @@
 import {
   AluguelRepository,
+  FindAluguel,
   UpdateAluguel,
 } from 'src/aluguel/domain/aluguel.repository';
 import { Repository } from 'typeorm';
@@ -10,7 +11,7 @@ export class TypeormAluguelRepository implements AluguelRepository {
   constructor(
     private readonly aluguelDatabase: Repository<TypeormAluguelEntity>,
   ) {}
-  save(aluguel: AluguelEntity): Promise<AluguelEntity> {
+  save(aluguel: Partial<AluguelEntity>): Promise<AluguelEntity> {
     return this.aluguelDatabase.save(aluguel);
   }
   async update(id: number, data: UpdateAluguel): Promise<AluguelEntity> {
@@ -21,11 +22,9 @@ export class TypeormAluguelRepository implements AluguelRepository {
       },
     });
   }
-  findBy(id: number): Promise<AluguelEntity> {
+  findBy(data: FindAluguel): Promise<AluguelEntity> {
     return this.aluguelDatabase.findOne({
-      where: {
-        id: id,
-      },
+      where: data,
     });
   }
 }
