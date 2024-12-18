@@ -1,50 +1,60 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ExternoService } from './externo.service';
+import { CobrancaStatus } from '../domain/cobranca';
 
 describe('ExternoService', () => {
-  let service: ExternoService;
+  let externoService: ExternoService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [ExternoService],
-    }).compile();
-
-    service = module.get<ExternoService>(ExternoService);
+  beforeEach(() => {
+    externoService = new ExternoService();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('sendEmail', () => {
+    it('deve retornar "sucesso" ao enviar um email com dados válidos', async () => {
+      const to = 'usuario@exemplo.com';
+      const subject = 'Teste';
+      const body = 'Este é um email de teste';
+
+      const result = await externoService.sendEmail(to, subject, body);
+
+      expect(result).toBe('sucesso');
+    });
+
+    it('deve lançar um erro se algum dos campos estiver vazio', async () => {
+      await expect(
+        externoService.sendEmail('', 'Teste', 'Corpo do email'),
+      ).rejects.toThrow('Todos os campos são obrigatórios.');
+
+      await expect(
+        externoService.sendEmail('usuario@exemplo.com', '', 'Corpo do email'),
+      ).rejects.toThrow('Todos os campos são obrigatórios.');
+
+      await expect(
+        externoService.sendEmail('usuario@exemplo.com', 'Teste', ''),
+      ).rejects.toThrow('Todos os campos são obrigatórios.');
+    });
   });
 
-  it('should return "sucesso" when email is sent', async () => {
-    const to = 'test@example.com';
-    const subject = 'Test Subject';
-    const body = 'This is a test email.';
+  describe('authorizeCobranca', () => {
+    it('deve autorizar uma cobrança e retornar os dados corretos', async () => {
+      const cobrancaInput = { ciclista: 1, valor: 100.0 };
+      const result = await externoService.authorizeCobranca(cobrancaInput);
 
-    const result = await service.sendEmail(to, subject, body);
+      expect(result).toEqual(
+        expect.objectContaining({
+          ciclista: cobrancaInput.ciclista,
+          valor: cobrancaInput.valor,
+          id: expect.any(Number),
+          status: CobrancaStatus.PAGA,
+          horaSolicitacao: expect.any(String),
+          horaFinalizacao: expect.any(String),
+        }),
+      );
 
-    expect(result).toBe('sucesso');
-  });
-
-  it('should log email details', async () => {
-    const to = 'test@example.com';
-    const subject = 'Log Test';
-    const body = 'Check if logs are correct.';
-
-    const consoleSpy = jest.spyOn(console, 'log');
-
-    await service.sendEmail(to, subject, body);
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      `Envio de email para: ${to},\n       Assunto: ${subject},\n       Corpo: ${body}`,
-    );
-
-    consoleSpy.mockRestore();
-  });
-
-  it('should throw an error if inputs are invalid', async () => {
-    await expect(service.sendEmail('', 'Test', 'Test body')).rejects.toThrow(
-      'Todos os campos são obrigatórios.',
-    );
+      const horaSolicitacao = new Date(result.horaSolicitacao);
+      const horaFinalizacao = new Date(result.horaFinalizacao);
+      expect(horaSolicitacao.getTime()).toBeLessThanOrEqual(
+        horaFinalizacao.getTime(),
+      );
+    });
   });
 });
