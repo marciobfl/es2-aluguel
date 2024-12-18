@@ -187,6 +187,41 @@ describe('CiclistaService', () => {
     expect(mockRepository.findBy).toHaveBeenCalled();
   });
 
+  describe('updateCiclista', () => {
+    it('should throw an error if ciclista does not exist', async () => {
+      jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null);
+      await expect(
+        ciclistaService.updateCiclista(123, ciclista),
+      ).rejects.toThrow('Ciclista não encontrado!\n');
+      expect(mockRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error if ciclista is not activated', async () => {
+      ciclista.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
+
+      await expect(
+        ciclistaService.updateCiclista(ciclista.id, ciclista),
+      ).rejects.toThrow('Ciclista não ativado!\n');
+      expect(mockRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should update ciclista when ciclista is found and activated', async () => {
+      ciclista.status = CiclistaStatus.ATIVADO;
+      jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
+
+      ciclista.nome = 'teste';
+      jest.spyOn(mockRepository, 'update').mockResolvedValue(ciclista);
+
+      const result = await ciclistaService.updateCiclista(
+        ciclista.id,
+        ciclista,
+      );
+
+      expect(result).toStrictEqual(CiclistaEntity.toDomain(ciclista));
+    });
+  });
+
   describe('allowAluguel', () => {
     it('should return false if the ciclista has an ongoing rental', async () => {
       ciclista.status = CiclistaStatus.ATIVADO;
