@@ -134,6 +134,7 @@ describe('AluguelService', () => {
     });
 
     it('should throw an error if tranca is not occupied', async () => {
+      tranca.status = TrancaStatus.LIVRE;
       jest
         .spyOn(mockEquipamentoService, 'getTrancaById')
         .mockResolvedValue(tranca);
@@ -166,6 +167,8 @@ describe('AluguelService', () => {
 
     it('should throw an error if bicicleta is not available', async () => {
       tranca.status = TrancaStatus.OCUPADA;
+      bicicleta.status = BicicletaStatus.APOSENTADA;
+
       jest
         .spyOn(mockEquipamentoService, 'getTrancaById')
         .mockResolvedValue(tranca);
@@ -179,6 +182,47 @@ describe('AluguelService', () => {
           ciclista: 1,
         }),
       ).rejects.toThrow('Bicicleta indisponível!\n');
+    });
+
+    it('should throw an error if ciclista does not exist', async () => {
+      tranca.status = TrancaStatus.OCUPADA;
+      bicicleta.status = BicicletaStatus.DISPONIVEL;
+
+      jest
+        .spyOn(mockEquipamentoService, 'getTrancaById')
+        .mockResolvedValue(tranca);
+      jest
+        .spyOn(mockEquipamentoService, 'getBicicletaById')
+        .mockResolvedValue(bicicleta);
+      jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(null);
+
+      await expect(
+        aluguelService.createAluguel({
+          trancaInicio: 1,
+          ciclista: 1,
+        }),
+      ).rejects.toThrow('Ciclista não encontrado!\n');
+    });
+
+    it('should throw an error if ciclista is not activated', async () => {
+      tranca.status = TrancaStatus.OCUPADA;
+      bicicleta.status = BicicletaStatus.DISPONIVEL;
+      ciclista.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+
+      jest
+        .spyOn(mockEquipamentoService, 'getTrancaById')
+        .mockResolvedValue(tranca);
+      jest
+        .spyOn(mockEquipamentoService, 'getBicicletaById')
+        .mockResolvedValue(bicicleta);
+      jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
+
+      await expect(
+        aluguelService.createAluguel({
+          trancaInicio: 1,
+          ciclista: 1,
+        }),
+      ).rejects.toThrow('Ciclista não ativado!\n');
     });
 
     it('should create aluguel successfully', async () => {
