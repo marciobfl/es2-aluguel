@@ -10,7 +10,7 @@ import FuncionarioEntity from './domain/funcionario.entity';
 
 describe('FuncionarioService', () => {
   let service: FuncionarioService;
-  let repository: FuncionarioRepository;
+  let repository: jest.Mocked<FuncionarioRepository>;
 
   const funcionario: FuncionarioEntity = {
     confirmacaoSenha: '1234',
@@ -44,7 +44,9 @@ describe('FuncionarioService', () => {
     }).compile();
 
     service = module.get<FuncionarioService>(FuncionarioService);
-    repository = module.get<FuncionarioRepository>('FuncionarioRepository');
+    repository = module.get<jest.Mocked<FuncionarioRepository>>(
+      'FuncionarioRepository',
+    );
   });
 
   it('should be defined', () => {
@@ -52,8 +54,8 @@ describe('FuncionarioService', () => {
   });
 
   describe('createFuncionario', () => {
-    it('should throw an error if the employee already exists', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(funcionario);
+    it('should throw an error if funcionario already exists', async () => {
+      repository.findBy.mockResolvedValueOnce(funcionario);
 
       await expect(
         service.createFuncionario(new CreateFuncionarioDto()),
@@ -67,20 +69,22 @@ describe('FuncionarioService', () => {
       expect(repository.findBy).toHaveBeenCalled();
     });
 
-    it('should create a new employee if they do not exist', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(null);
-      jest.spyOn(repository, 'save').mockResolvedValueOnce(funcionario);
+    it('should create a new funcionario if they do not exist', async () => {
+      repository.findBy.mockResolvedValueOnce(null);
+      repository.save.mockResolvedValueOnce(funcionario);
+
       await expect(
         service.createFuncionario(new CreateFuncionarioDto()),
       ).resolves.toStrictEqual(funcionarioDomain);
+
       expect(repository.findBy).toHaveBeenCalled();
       expect(repository.save).toHaveBeenCalled();
     });
   });
 
   describe('deleteFuncionario', () => {
-    it('should throw an error if the employee does not exist', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(null);
+    it('should throw an error if funcionario does not exist', async () => {
+      repository.findBy.mockResolvedValueOnce(null);
 
       await expect(
         service.deleteFuncionario(new DeleteFuncionarioDto()),
@@ -90,20 +94,26 @@ describe('FuncionarioService', () => {
           AppErrorType.RESOURCE_NOT_FOUND,
         ),
       );
+
+      expect(repository.findBy).toHaveBeenCalled();
     });
 
-    it('should delete the employee if they exist', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(funcionario);
+    it('should delete funcionario if they exist', async () => {
+      repository.findBy.mockResolvedValueOnce(funcionario);
+
       await expect(
         service.deleteFuncionario(new DeleteFuncionarioDto()),
       ).resolves.toBeUndefined();
+
+      expect(repository.findBy).toHaveBeenCalled();
       expect(repository.delete).toHaveBeenCalled();
     });
   });
 
   describe('updateFuncionario', () => {
-    it('should throw an error if the employee does not exist', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(null);
+    it('should throw an error if funcionario does not exist', async () => {
+      repository.findBy.mockResolvedValueOnce(null);
+
       await expect(
         service.updateFuncionario(1, new UpdateFuncionarioDto()),
       ).rejects.toThrow(
@@ -112,33 +122,62 @@ describe('FuncionarioService', () => {
           AppErrorType.RESOURCE_NOT_FOUND,
         ),
       );
+
       expect(repository.findBy).toHaveBeenCalled();
     });
 
-    it('should update the employee if they exist', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(funcionario);
+    it('should update funcionario if they exist', async () => {
+      repository.findBy.mockResolvedValueOnce(funcionario);
+
       await expect(
         service.updateFuncionario(1, new UpdateFuncionarioDto()),
       ).resolves.toBeUndefined();
+
       expect(repository.findBy).toHaveBeenCalled();
+      expect(repository.update).toHaveBeenCalled();
     });
   });
 
   describe('findAll', () => {
-    it('should return all employees', async () => {
-      jest.spyOn(repository, 'findAll').mockResolvedValueOnce([funcionario]);
+    it('should return all funcionarios', async () => {
+      repository.findAll.mockResolvedValueOnce([funcionario]);
+
       await expect(service.findAll()).resolves.toStrictEqual([
         funcionarioDomain,
       ]);
+
       expect(repository.findAll).toHaveBeenCalled();
     });
   });
 
   describe('findBy', () => {
-    it('should return the employee by id', async () => {
-      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(funcionario);
-      await expect(service.findBy(1)).resolves.toStrictEqual(funcionarioDomain);
+    it('should throw an error if funcionario is not found', async () => {
+      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(null);
+
+      await expect(service.findBy(123)).rejects.toThrow(
+        new AppError(
+          'Funcionário não cadastrado!\n',
+          AppErrorType.RESOURCE_NOT_FOUND,
+        ),
+      );
+
       expect(repository.findBy).toHaveBeenCalled();
+    });
+
+    it('should return funcionario by id if found', async () => {
+      jest.spyOn(repository, 'findBy').mockResolvedValueOnce(funcionario);
+
+      const result = await service.findBy(1);
+      expect(result).toStrictEqual(funcionarioDomain);
+
+      expect(repository.findBy).toHaveBeenCalled();
+    });
+  });
+
+  describe('generateMatricula', () => {
+    it('should generate a valid matricula', () => {
+      const matricula = service.generateMatricula();
+      expect(matricula).toMatch(/^\d{4}\d{6}$/);
     });
   });
 });
