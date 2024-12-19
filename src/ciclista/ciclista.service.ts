@@ -102,6 +102,12 @@ export class CiclistaService {
       data,
     );
 
+    await this.externoService.sendEmail(
+      ciclista.email,
+      'Vá de Bicicleta - Cadastro atualizado',
+      'Cadastro atualizado com sucesso!',
+    );
+
     return CiclistaEntity.toDomain(updatedCiclista);
   }
 
