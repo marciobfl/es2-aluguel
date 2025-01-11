@@ -20,7 +20,7 @@ export class CartaoDeCreditoService {
 
     if (!cartaoDeCredito) {
       throw new AppError(
-        'Cartão não encontrado!\n',
+        'Ciclista não encontrado!\n',
         AppErrorType.RESOURCE_NOT_FOUND,
       );
     }
@@ -40,7 +40,7 @@ export class CartaoDeCreditoService {
 
     if (!cartaoDeCredito) {
       throw new AppError(
-        'Cartão não encontrado!\n',
+        'Ciclista não encontrado!\n',
         AppErrorType.RESOURCE_NOT_FOUND,
       );
     }

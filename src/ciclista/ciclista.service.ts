@@ -115,6 +115,14 @@ export class CiclistaService {
     const ciclistaidCiclistas = await this.ciclistaRepository.findBy({
       id: idCiclista,
     });
+
+    if (!ciclistaidCiclistas) {
+      throw new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      );
+    }
+
     return CiclistaEntity.toDomain(ciclistaidCiclistas);
   }
 
