@@ -29,7 +29,10 @@ export default class CiclistaEntity {
     ciclista.email = ciclistaEntity.email;
     ciclista.urlFotoDocumento = ciclistaEntity.urlFotoDocumento;
     ciclista.nascimento = ciclistaEntity.nascimento.toString();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8c54050d35387acd057fb5c1ee8e0b6f75b1f24a
     if (ciclistaEntity.passaporte) {
       ciclista.passaporte = ciclistaEntity.passaporte;
     }
