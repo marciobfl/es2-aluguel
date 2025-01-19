@@ -16,7 +16,9 @@ export class CiclistaService {
     private readonly ciclistaRepository: CiclistaRepository,
     @Inject('AluguelRepository')
     private readonly aluguelRepository: AluguelRepository,
+    @Inject('ExternoService')
     private readonly externoService: ExternoService,
+    @Inject('EquipamentoService')
     private readonly equipamentoService: EquipamentoService,
   ) {}
 

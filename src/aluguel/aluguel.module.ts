@@ -9,14 +9,14 @@ import TypeormCiclistaEntity from 'src/ciclista/infra/typeorm/entities/typeorm-c
 import { EquipamentoService } from 'src/common/external/equipamento.service';
 import { ExternoService } from 'src/common/external/externo.service';
 import { TypeormCiclistaRepository } from 'src/ciclista/infra/typeorm/repositories/typeorm-ciclista.repository';
+import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeormCiclistaEntity])],
   controllers: [AluguelController],
   providers: [
     AluguelService,
-    EquipamentoService,
-    ExternoService,
     {
       provide: 'AluguelRepository',
       inject: [DataSource],
@@ -34,6 +34,26 @@ import { TypeormCiclistaRepository } from 'src/ciclista/infra/typeorm/repositori
           dataSource.getRepository(TypeormCiclistaEntity),
         );
       },
+    },
+    {
+      provide: 'ExternoService',
+      useFactory: (configService: ConfigService) => {
+        const cliente = axios.create({
+          baseURL: configService.get('EXTERNO_SERVICE_URL'),
+        });
+        return new ExternoService(cliente);
+      },
+      inject: [ConfigService],
+    },
+    {
+      provide: 'EquipamentoService',
+      useFactory: (configService: ConfigService) => {
+        const cliente = axios.create({
+          baseURL: configService.get('EQUIPAMENTO_SERVICE_URL'),
+        });
+        return new EquipamentoService(cliente);
+      },
+      inject: [ConfigService],
     },
   ],
 })

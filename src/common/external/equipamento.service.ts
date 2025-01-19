@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Bicicleta, { BicicletaStatus } from '../domain/bicicleta';
 import { Tranca, TrancaStatus } from '../domain/tranca';
+import { AxiosInstance } from 'axios';
 
 export type TypeTranca = {
   idTranca: number;
@@ -9,6 +10,8 @@ export type TypeTranca = {
 
 @Injectable()
 export class EquipamentoService {
+  constructor(private readonly cliente: AxiosInstance) {}
+
   async getBicicletaById(idBicicleta: number): Promise<Bicicleta> {
     return {
       id: idBicicleta,

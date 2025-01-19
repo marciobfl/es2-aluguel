@@ -4,16 +4,16 @@ import { CiclistaService } from './ciclista.service';
 import { TypeormCiclistaRepository } from './infra/typeorm/repositories/typeorm-ciclista.repository';
 import { DataSource } from 'typeorm';
 import TypeormCiclistaEntity from './infra/typeorm/entities/typeorm-ciclista.entity';
-import { ExternoService } from 'src/common/external/externo.service';
 import { TypeormAluguelRepository } from 'src/aluguel/infra/typeorm/repositories/typeorm-aluguel.repository';
 import TypeormAluguelEntity from 'src/aluguel/infra/typeorm/entities/typeorm-aluguel.entity';
+import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
+import { ExternoService } from 'src/common/external/externo.service';
 import { EquipamentoService } from 'src/common/external/equipamento.service';
 
 @Module({
   controllers: [CiclistaController],
   providers: [
-    ExternoService,
-    EquipamentoService,
     CiclistaService,
     {
       provide: 'CiclistaRepository',
@@ -32,6 +32,26 @@ import { EquipamentoService } from 'src/common/external/equipamento.service';
         );
       },
       inject: [DataSource],
+    },
+    {
+      provide: 'ExternoService',
+      useFactory: (configService: ConfigService) => {
+        const cliente = axios.create({
+          baseURL: configService.get('EXTERNO_SERVICE_URL'),
+        });
+        return new ExternoService(cliente);
+      },
+      inject: [ConfigService],
+    },
+    {
+      provide: 'EquipamentoService',
+      useFactory: (configService: ConfigService) => {
+        const cliente = axios.create({
+          baseURL: configService.get('EQUIPAMENTO_SERVICE_URL'),
+        });
+        return new EquipamentoService(cliente);
+      },
+      inject: [ConfigService],
     },
   ],
 })

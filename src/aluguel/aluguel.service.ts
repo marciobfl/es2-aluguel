@@ -10,6 +10,7 @@ import { TrancaStatus } from 'src/common/domain/tranca';
 import { BicicletaStatus } from 'src/common/domain/bicicleta';
 import AluguelEntity from './domain/aluguel.entity';
 import { ReturnBicicletaAluguelDto } from './dto/return-bicicleta-aluguel.dto';
+import { CobrancaStatus } from 'src/common/domain/cobranca';
 
 @Injectable()
 export class AluguelService {
@@ -18,7 +19,9 @@ export class AluguelService {
     private readonly aluguelRepository: AluguelRepository,
     @Inject('CiclistaRepository')
     private readonly ciclistaRepository: CiclistaRepository,
+    @Inject('ExternoService')
     private readonly externoService: ExternoService,
+    @Inject('EquipamentoService')
     private readonly equipamentoService: EquipamentoService,
   ) {}
 
@@ -91,10 +94,14 @@ export class AluguelService {
       );
     }
 
-    await this.externoService.authorizeCobranca({
+    const cobranca = await this.externoService.authorizeCobranca({
       ciclista: createAluguelDto.ciclista,
       valor: this.COBRANCA_BASE_VALUE,
     });
+
+    if (cobranca.status == CobrancaStatus.FALHA) {
+      throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
+    }
 
     const createdAluguel = await this.aluguelRepository.save({
       ciclista: createAluguelDto.ciclista,

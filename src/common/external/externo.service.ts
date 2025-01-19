@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import Cobranca, { CobrancaStatus } from '../domain/cobranca';
+import { AxiosInstance } from 'axios';
+import { AppError, AppErrorType } from '../domain/app-error';
+import Cobranca from '../domain/cobranca';
 
 export type CreateCobranca = {
   ciclista: number;
@@ -8,25 +10,29 @@ export type CreateCobranca = {
 
 @Injectable()
 export class ExternoService {
-  async sendEmail(to: string, subject: string, body: string): Promise<string> {
-    if (!to || !subject || !body) {
-      throw new Error('Todos os campos são obrigatórios.');
+  constructor(private readonly cliente: AxiosInstance) {}
+
+  async sendEmail(to: string, subject: string, body: string): Promise<void> {
+    try {
+      await this.cliente.post('/enviarEmail', {
+        email: to,
+        assunto: subject,
+        mensagem: body,
+      });
+    } catch {
+      throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
     }
-    console.log(
-      `Envio de email para: ${to},
-       Assunto: ${subject},
-       Corpo: ${body}`,
-    );
-    return 'sucesso';
   }
   async authorizeCobranca(cobranca: CreateCobranca): Promise<Cobranca> {
-    return {
-      ciclista: cobranca.ciclista,
-      valor: cobranca.valor,
-      id: 1,
-      status: CobrancaStatus.PAGA,
-      horaSolicitacao: new Date().toISOString(),
-      horaFinalizacao: new Date().toISOString(),
-    };
+    try {
+      const response = await this.cliente.post('/cobranca', {
+        valor: cobranca.valor,
+        ciclista: cobranca.ciclista,
+      });
+
+      return response.data;
+    } catch {
+      throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
+    }
   }
 }
