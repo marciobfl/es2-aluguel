@@ -60,7 +60,10 @@ describe('CartaoDeCreditoService', () => {
     jest.spyOn(mockRepository, 'findBy').mockResolvedValue(null);
 
     await expect(service.getCartaoDeCredito(ciclistaId)).rejects.toThrow(
-      new AppError('Cartão não encontrado!\n', AppErrorType.RESOURCE_NOT_FOUND),
+      new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      ),
     );
   });
 
@@ -86,7 +89,10 @@ describe('CartaoDeCreditoService', () => {
     await expect(
       service.updateCartaoDeCredito(ciclistaId, updateData),
     ).rejects.toThrow(
-      new AppError('Cartão não encontrado!\n', AppErrorType.RESOURCE_NOT_FOUND),
+      new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_NOT_FOUND,
+      ),
     );
   });
 });

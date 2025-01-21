@@ -92,22 +92,22 @@ describe('CiclistaService', () => {
     mockExternoService = {
       sendEmail: jest.fn(),
       authorizeCobranca: jest.fn(),
-    };
+    } as unknown as ExternoService;
 
     mockEquipamentoService = {
       getBicicletaById: jest.fn(),
       getTrancaById: jest.fn(),
       lockTranca: jest.fn(),
       unlockTranca: jest.fn(),
-    };
+    } as unknown as EquipamentoService;
 
     const module = await Test.createTestingModule({
       providers: [
         CiclistaService,
         { provide: 'CiclistaRepository', useValue: mockRepository },
         { provide: 'AluguelRepository', useValue: mockAluguelRepository },
-        { provide: EquipamentoService, useValue: mockEquipamentoService },
         { provide: ExternoService, useValue: mockExternoService },
+        { provide: EquipamentoService, useValue: mockEquipamentoService },
       ],
     }).compile();
 

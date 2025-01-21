@@ -1,60 +1,93 @@
 import { ExternoService } from './externo.service';
-import { CobrancaStatus } from '../domain/cobranca';
+import { AxiosInstance } from 'axios';
+import { AppError } from '../domain/app-error';
+import Cobranca, { CobrancaStatus } from '../domain/cobranca';
+
+jest.mock('axios'); // Mock da biblioteca axios
+
+const mockAxios = {
+  post: jest.fn(),
+} as unknown as AxiosInstance;
 
 describe('ExternoService', () => {
-  let externoService: ExternoService;
+  let service: ExternoService;
 
   beforeEach(() => {
-    externoService = new ExternoService();
+    service = new ExternoService(mockAxios);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('sendEmail', () => {
-    it('deve retornar "sucesso" ao enviar um email com dados válidos', async () => {
-      const to = 'usuario@exemplo.com';
-      const subject = 'Teste';
-      const body = 'Este é um email de teste';
+    it('should send an email successfully', async () => {
+      jest.spyOn(mockAxios, 'post').mockResolvedValueOnce({});
 
-      const result = await externoService.sendEmail(to, subject, body);
+      await expect(
+        service.sendEmail('test@example.com', 'Subject', 'Body'),
+      ).resolves.not.toThrow();
 
-      expect(result).toBe('sucesso');
+      expect(mockAxios.post).toHaveBeenCalledWith('/enviarEmail', {
+        email: 'test@example.com',
+        assunto: 'Subject',
+        mensagem: 'Body',
+      });
     });
 
-    it('deve lançar um erro se algum dos campos estiver vazio', async () => {
-      await expect(
-        externoService.sendEmail('', 'Teste', 'Corpo do email'),
-      ).rejects.toThrow('Todos os campos são obrigatórios.');
+    it('should throw an AppError when email sending fails', async () => {
+      jest
+        .spyOn(mockAxios, 'post')
+        .mockRejectedValueOnce(new Error('Network Error'));
 
       await expect(
-        externoService.sendEmail('usuario@exemplo.com', '', 'Corpo do email'),
-      ).rejects.toThrow('Todos os campos são obrigatórios.');
-
-      await expect(
-        externoService.sendEmail('usuario@exemplo.com', 'Teste', ''),
-      ).rejects.toThrow('Todos os campos são obrigatórios.');
+        service.sendEmail('test@example.com', 'Subject', 'Body'),
+      ).rejects.toThrow(AppError);
+      expect(mockAxios.post).toHaveBeenCalledWith('/enviarEmail', {
+        email: 'test@example.com',
+        assunto: 'Subject',
+        mensagem: 'Body',
+      });
     });
   });
 
   describe('authorizeCobranca', () => {
-    it('deve autorizar uma cobrança e retornar os dados corretos', async () => {
-      const cobrancaInput = { ciclista: 1, valor: 100.0 };
-      const result = await externoService.authorizeCobranca(cobrancaInput);
+    it('should return cobranca when authorization is successful', async () => {
+      const cobrancaMock: Cobranca = {
+        id: 1,
+        valor: 100,
+        ciclista: 2,
+        horaFinalizacao: '',
+        horaSolicitacao: '',
+        status: CobrancaStatus.PAGA,
+      };
+      const createCobranca = { valor: 100, ciclista: 2 };
+      jest
+        .spyOn(mockAxios, 'post')
+        .mockResolvedValueOnce({ data: cobrancaMock });
 
-      expect(result).toEqual(
-        expect.objectContaining({
-          ciclista: cobrancaInput.ciclista,
-          valor: cobrancaInput.valor,
-          id: expect.any(Number),
-          status: CobrancaStatus.PAGA,
-          horaSolicitacao: expect.any(String),
-          horaFinalizacao: expect.any(String),
-        }),
-      );
+      const result = await service.authorizeCobranca(createCobranca);
 
-      const horaSolicitacao = new Date(result.horaSolicitacao);
-      const horaFinalizacao = new Date(result.horaFinalizacao);
-      expect(horaSolicitacao.getTime()).toBeLessThanOrEqual(
-        horaFinalizacao.getTime(),
+      expect(mockAxios.post).toHaveBeenCalledWith('/cobranca', {
+        valor: 100,
+        ciclista: 2,
+      });
+      expect(result).toEqual(cobrancaMock);
+    });
+
+    it('should throw an AppError when authorization fails', async () => {
+      const createCobranca = { valor: 100, ciclista: 2 };
+      jest
+        .spyOn(mockAxios, 'post')
+        .mockRejectedValueOnce(new Error('Network Error'));
+
+      await expect(service.authorizeCobranca(createCobranca)).rejects.toThrow(
+        AppError,
       );
+      expect(mockAxios.post).toHaveBeenCalledWith('/cobranca', {
+        valor: 100,
+        ciclista: 2,
+      });
     });
   });
 });

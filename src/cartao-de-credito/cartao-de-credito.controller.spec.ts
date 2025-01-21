@@ -52,13 +52,13 @@ describe('CartaoDeCreditoController', () => {
     it('should throw an error if cartao de credito not found', async () => {
       mockService.getCartaoDeCredito.mockRejectedValue(
         new AppError(
-          'Cartão não encontrado!\n',
+          'Ciclista não encontrado!\n',
           AppErrorType.RESOURCE_NOT_FOUND,
         ),
       );
 
       await expect(controller.getCartaoDeCredito(1)).rejects.toThrow(
-        'Cartão não encontrado!',
+        'Ciclista não encontrado!',
       );
       expect(service.getCartaoDeCredito).toHaveBeenCalledWith(1);
     });
@@ -90,13 +90,13 @@ describe('CartaoDeCreditoController', () => {
 
       mockService.updateCartaoDeCredito.mockRejectedValue(
         new AppError(
-          'Cartão não encontrado!\n',
+          'Ciclista não encontrado!\n',
           AppErrorType.RESOURCE_NOT_FOUND,
         ),
       );
 
       await expect(controller.updateCartaoDeCredito(1, dto)).rejects.toThrow(
-        'Cartão não encontrado!',
+        'Ciclista não encontrado!',
       );
       expect(service.updateCartaoDeCredito).toHaveBeenCalledWith(1, dto);
     });

@@ -99,12 +99,12 @@ describe('AluguelService', () => {
       getBicicletaById: jest.fn(),
       lockTranca: jest.fn(),
       unlockTranca: jest.fn(),
-    };
+    } as unknown as EquipamentoService;
 
     mockExternoService = {
       authorizeCobranca: jest.fn(),
       sendEmail: jest.fn(),
-    };
+    } as unknown as ExternoService;
 
     const module = await Test.createTestingModule({
       providers: [

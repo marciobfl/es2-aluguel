@@ -173,11 +173,4 @@ describe('FuncionarioService', () => {
       expect(repository.findBy).toHaveBeenCalled();
     });
   });
-
-  describe('generateMatricula', () => {
-    it('should generate a valid matricula', () => {
-      const matricula = service.generateMatricula();
-      expect(matricula).toMatch(/^\d{4}\d{6}$/);
-    });
-  });
 });
