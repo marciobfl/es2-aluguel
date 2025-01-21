@@ -5,6 +5,7 @@ import FuncionarioEntity from './domain/funcionario.entity';
 import DeleteFuncionarioDto from './dto/delete-funcionario.dto';
 import UpdateFuncionarioDto from './dto/update-funcionario.dto';
 import { AppError, AppErrorType } from 'src/common/domain/app-error';
+import generateMatricula from 'src/common/utils/generate-matricula';
 
 @Injectable()
 export class FuncionarioService {
@@ -25,7 +26,7 @@ export class FuncionarioService {
       );
     }
 
-    const funcionarioMatricula = this.generateMatricula();
+    const funcionarioMatricula = generateMatricula();
 
     const newFuncionario = await this.funcionarioRepository.save({
       ...createFuncionarioDto,
@@ -84,11 +85,5 @@ export class FuncionarioService {
       );
     }
     return FuncionarioEntity.toDomain(funcionario);
-  }
-
-  generateMatricula() {
-    const currentYear = new Date().getFullYear();
-    const randomNumber = Math.floor(100000 + Math.random() * 900000);
-    return `${currentYear}${randomNumber}`;
   }
 }

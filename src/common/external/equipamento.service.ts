@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import Bicicleta, { BicicletaStatus } from '../domain/bicicleta';
-import { Tranca, TrancaStatus } from '../domain/tranca';
-import { AxiosInstance } from 'axios';
+import Bicicleta from '../domain/bicicleta';
+import { Tranca } from '../domain/tranca';
+import { AxiosError, AxiosInstance } from 'axios';
 
 export type TypeTranca = {
   idTranca: number;
@@ -10,52 +10,48 @@ export type TypeTranca = {
 
 @Injectable()
 export class EquipamentoService {
-  constructor(private readonly cliente: AxiosInstance) {}
+  constructor(private readonly client: AxiosInstance) {}
 
   async getBicicletaById(idBicicleta: number): Promise<Bicicleta> {
-    return {
-      id: idBicicleta,
-      marca: 'Caloi',
-      modelo: 'Mountain Bike',
-      ano: '2019',
-      numero: 500,
-      status: BicicletaStatus.EM_USO,
-    };
+    try {
+      const response = await this.client.get('/bicicleta/' + idBicicleta);
+      return response.data;
+    } catch {
+      return null;
+    }
   }
 
   async getTrancaById(idTranca: number): Promise<Tranca> {
-    return {
-      id: idTranca,
-      bicicleta: 1,
-      anoDeFabricacao: '2024',
-      localizacao: 'Urca',
-      modelo: 'tranca ',
-      numero: 500,
-      status: TrancaStatus.LIVRE,
-    };
+    try {
+      const response = await this.client.get('/tranca/' + idTranca);
+      return response.data;
+    } catch (error) {
+      console.log((error as AxiosError).response);
+      return null;
+    }
   }
 
   async unlockTranca(unlockTranca: TypeTranca): Promise<Tranca> {
-    return {
-      id: unlockTranca.idTranca,
-      bicicleta: unlockTranca.idBicicleta,
-      anoDeFabricacao: '2024',
-      localizacao: 'Urca',
-      modelo: 'tranca ',
-      numero: 500,
-      status: TrancaStatus.LIVRE,
-    };
+    try {
+      const response = await this.client.post(
+        '/tranca/' + unlockTranca.idTranca + '/destrancar',
+        { bicicleta: unlockTranca.idBicicleta },
+      );
+      return response.data;
+    } catch {
+      return null;
+    }
   }
 
   async lockTranca(lockTranca: TypeTranca): Promise<Tranca> {
-    return {
-      id: lockTranca.idTranca,
-      bicicleta: lockTranca.idBicicleta,
-      anoDeFabricacao: '2024',
-      localizacao: 'Urca',
-      modelo: 'tranca ',
-      numero: 500,
-      status: TrancaStatus.OCUPADA,
-    };
+    try {
+      const response = await this.client.post(
+        '/tranca/' + lockTranca.idTranca + '/trancar',
+        { bicicleta: lockTranca.idBicicleta },
+      );
+      return response.data;
+    } catch {
+      return null;
+    }
   }
 }

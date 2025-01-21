@@ -19,9 +19,7 @@ export class AluguelService {
     private readonly aluguelRepository: AluguelRepository,
     @Inject('CiclistaRepository')
     private readonly ciclistaRepository: CiclistaRepository,
-    @Inject('ExternoService')
     private readonly externoService: ExternoService,
-    @Inject('EquipamentoService')
     private readonly equipamentoService: EquipamentoService,
   ) {}
 
@@ -108,7 +106,7 @@ export class AluguelService {
       trancaInicio: createAluguelDto.trancaInicio,
       horaInicio: new Date(),
       bicicleta: bicicleta.id,
-      cobranca: this.COBRANCA_BASE_VALUE,
+      cobranca: cobranca.id,
     });
 
     await this.equipamentoService.unlockTranca({

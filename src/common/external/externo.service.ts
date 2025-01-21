@@ -29,7 +29,6 @@ export class ExternoService {
         valor: cobranca.valor,
         ciclista: cobranca.ciclista,
       });
-
       return response.data;
     } catch {
       throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
