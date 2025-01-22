@@ -16,6 +16,9 @@ export class AppErrorFilter implements ExceptionFilter {
       case AppErrorType.RESOURCE_CONFLICT:
         status = 409;
         break;
+      case AppErrorType.RESOURCE_INVALID:
+        status = 422;
+        break;
     }
 
     response.status(status).json({

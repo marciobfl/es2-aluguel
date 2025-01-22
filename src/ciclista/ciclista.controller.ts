@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CiclistaService } from './ciclista.service';
 import CreateCiclistaDto from './dto/create-ciclista.dto';
 import UpdateCiclistaDto from './dto/update-ciclista.dto';
@@ -8,6 +16,7 @@ export default class CiclistaController {
   constructor(private readonly ciclistaService: CiclistaService) {}
 
   @Post()
+  @HttpCode(201)
   createCiclista(@Body() createCiclistaDto: CreateCiclistaDto) {
     return this.ciclistaService.createCiclista(createCiclistaDto);
   }

@@ -68,7 +68,7 @@ export class CiclistaService {
     if (ciclista.status == CiclistaStatus.ATIVADO) {
       throw new AppError(
         'Ciclista já ativado!\n',
-        AppErrorType.RESOURCE_CONFLICT,
+        AppErrorType.RESOURCE_NOT_FOUND,
       );
     }
 
@@ -93,7 +93,7 @@ export class CiclistaService {
     if (ciclista.status != CiclistaStatus.ATIVADO) {
       throw new AppError(
         'Ciclista não ativado!\n',
-        AppErrorType.RESOURCE_CONFLICT,
+        AppErrorType.RESOURCE_NOT_FOUND,
       );
     }
 
