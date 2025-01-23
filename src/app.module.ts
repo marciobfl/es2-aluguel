@@ -23,7 +23,8 @@ import credentialsConfig from './common/config/credentials.config';
     AluguelModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ['.env.local', '.env'],
+      ignoreEnvFile: process.env.NODE_ENV === 'aws-prod' ? true : false,
       load: [credentialsConfig],
     }),
   ],

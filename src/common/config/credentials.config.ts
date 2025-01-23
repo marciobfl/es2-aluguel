@@ -4,7 +4,7 @@ import { fetchSecrets } from '../@aws/secrets';
 export default async () => {
   const configService = new ConfigService();
   if (configService.get('NODE_ENV') === 'aws-prod') {
-    const secretName = configService.get('AWS_SECRET_NAME');
+    const secretName = 'prod/es2-aluguel';
     const secrets = await fetchSecrets(secretName);
 
     return {

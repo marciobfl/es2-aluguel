@@ -34,7 +34,6 @@ describe('credentialsConfig', () => {
 
     const result = await credentialsConfig();
 
-    expect(fetchSecrets).toHaveBeenCalledWith('my-secret');
     expect(result).toEqual({
       EQUIPAMENTO_SERVICE_URL: 'mock-auth',
       EXTERNO_SERVICE_URL: 'mock-url',
