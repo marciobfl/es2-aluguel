@@ -74,7 +74,8 @@
       "<rootDir>"
     ],
     "collectCoverageFrom": [
-      "src/**/*.(t|j)s"
+      "src/**/*.(t|j)s",
+      "!src/**/*.module.(t|j)s"
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node"
