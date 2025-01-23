@@ -134,6 +134,20 @@ describe('AluguelService', () => {
       ).rejects.toThrow('Tranca não existe!\n');
     });
 
+    it('should throw an error if ciclista has rented a bike and is not finished', async () => {
+      aluguel.horaFim = null;
+
+      jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
+      jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
+
+      await expect(
+        aluguelService.createAluguel({
+          trancaInicio: 1,
+          ciclista: 1,
+        }),
+      ).rejects.toThrow('Aluguel não permitido!\n');
+    });
+
     it('should throw an error if tranca is not occupied', async () => {
       tranca.status = TrancaStatus.LIVRE;
       jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
@@ -284,6 +298,23 @@ describe('AluguelService', () => {
       ).rejects.toThrow('Bicicleta não existe!');
     });
 
+    it('should throw an error if bicicleta is not being used', async () => {
+      jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
+      jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
+
+      bicicleta.status = BicicletaStatus.EM_REPARO;
+      jest
+        .spyOn(mockEquipamentoService, 'getBicicletaById')
+        .mockResolvedValue(bicicleta);
+
+      await expect(
+        aluguelService.returnBicicletaAluguel({
+          idBicicleta: 1,
+          idTranca: 1,
+        }),
+      ).rejects.toThrow('Bicicleta indisponível!\n');
+    });
+
     it('should throw an error if ciclista does not exist', async () => {
       jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
       jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(null);
@@ -310,6 +341,27 @@ describe('AluguelService', () => {
       ).rejects.toThrow('Ciclista não ativado!\n');
     });
 
+    it('should throw an error if tranca does not exists', async () => {
+      tranca.status = TrancaStatus.OCUPADA;
+
+      jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
+      jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
+
+      jest
+        .spyOn(mockEquipamentoService, 'getBicicletaById')
+        .mockResolvedValue(bicicleta);
+      jest
+        .spyOn(mockEquipamentoService, 'getTrancaById')
+        .mockResolvedValue(null);
+
+      await expect(
+        aluguelService.returnBicicletaAluguel({
+          idBicicleta: 1,
+          idTranca: 1,
+        }),
+      ).rejects.toThrow('Tranca não existe!\n');
+    });
+
     it('should throw an error if tranca is not available', async () => {
       tranca.status = TrancaStatus.OCUPADA;
 
@@ -329,6 +381,17 @@ describe('AluguelService', () => {
           idTranca: 1,
         }),
       ).rejects.toThrow('Tranca indisponível!\n');
+    });
+
+    it('should throw an error if aluguel does not exists', async () => {
+      jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(null);
+
+      await expect(
+        aluguelService.returnBicicletaAluguel({
+          idBicicleta: 1,
+          idTranca: 1,
+        }),
+      ).rejects.toThrow('Aluguel não existe!\n');
     });
 
     it('should complete aluguel successfully', async () => {
