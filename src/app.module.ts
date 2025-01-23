@@ -24,7 +24,7 @@ import credentialsConfig from './common/config/credentials.config';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
-      ignoreEnvFile: process.env.NODE_ENV === 'aws-prod' ? true : false,
+      ignoreEnvFile: process.env.NODE_ENV === 'aws-prod',
       load: [credentialsConfig],
     }),
   ],
@@ -40,7 +40,6 @@ import credentialsConfig from './common/config/credentials.config';
     {
       provide: EquipamentoService,
       useFactory: (configService: ConfigService) => {
-        console.log(configService.get('EQUIPAMENTO_SERVICE_URL'));
         const client = axios.create({
           baseURL: configService.get('EQUIPAMENTO_SERVICE_URL'),
         });

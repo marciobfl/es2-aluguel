@@ -11,7 +11,7 @@ import { CiclistaStatus } from './ciclista/domain/ciclista';
 export default class AppService {
   constructor(
     @Inject('DataSource')
-    private dataSource: DataSource,
+    private readonly dataSource: DataSource,
   ) {}
 
   async restoreDatabase() {
