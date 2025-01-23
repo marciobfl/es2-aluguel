@@ -11,6 +11,7 @@ import { DataSource } from 'typeorm';
 import { EquipamentoService } from './common/external/equipamento.service';
 import axios from 'axios';
 import { ExternoService } from './common/external/externo.service';
+import credentialsConfig from './common/config/credentials.config';
 
 @Global()
 @Module({
@@ -23,6 +24,7 @@ import { ExternoService } from './common/external/externo.service';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      load: [credentialsConfig],
     }),
   ],
   controllers: [AppController],

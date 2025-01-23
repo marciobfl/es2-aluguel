@@ -10,7 +10,6 @@ import { TrancaStatus } from 'src/common/domain/tranca';
 import { BicicletaStatus } from 'src/common/domain/bicicleta';
 import AluguelEntity from './domain/aluguel.entity';
 import { ReturnBicicletaAluguelDto } from './dto/return-bicicleta-aluguel.dto';
-import { CobrancaStatus } from 'src/common/domain/cobranca';
 
 @Injectable()
 export class AluguelService {
@@ -27,21 +26,47 @@ export class AluguelService {
   private readonly COBRANCA_PER_HALF_HOUR_VALUE = 5;
 
   async createAluguel(createAluguelDto: CreateAluguelDto) {
+    const ciclista = await this.ciclistaRepository.findBy({
+      id: createAluguelDto.ciclista,
+    });
+
+    if (!ciclista) {
+      throw new AppError(
+        'Ciclista não encontrado!\n',
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
+    if (ciclista.status != CiclistaStatus.ATIVADO) {
+      throw new AppError(
+        'Ciclista não ativado!\n',
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
+    const aluguel = await this.aluguelRepository.findBy({
+      ciclista: createAluguelDto.ciclista,
+    });
+
+    if (aluguel && !aluguel.horaFim) {
+      throw new AppError(
+        'Aluguel não permitido!\n',
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
     const tranca = await this.equipamentoService.getTrancaById(
       createAluguelDto.trancaInicio,
     );
 
     if (!tranca) {
-      throw new AppError(
-        'Tranca não existe!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
-      );
+      throw new AppError('Tranca não existe!\n', AppErrorType.RESOURCE_INVALID);
     }
 
     if (tranca.status != TrancaStatus.OCUPADA) {
       throw new AppError(
         'Tranca indisponível!\n',
-        AppErrorType.RESOURCE_CONFLICT,
+        AppErrorType.RESOURCE_INVALID,
       );
     }
 
@@ -52,43 +77,14 @@ export class AluguelService {
     if (!bicicleta) {
       throw new AppError(
         'Bicicleta não existe!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
+        AppErrorType.RESOURCE_INVALID,
       );
     }
 
     if (bicicleta.status != BicicletaStatus.DISPONIVEL) {
       throw new AppError(
         'Bicicleta indisponível!\n',
-        AppErrorType.RESOURCE_CONFLICT,
-      );
-    }
-
-    const ciclista = await this.ciclistaRepository.findBy({
-      id: createAluguelDto.ciclista,
-    });
-
-    if (!ciclista) {
-      throw new AppError(
-        'Ciclista não encontrado!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
-      );
-    }
-
-    if (ciclista.status != CiclistaStatus.ATIVADO) {
-      throw new AppError(
-        'Ciclista não ativado!\n',
-        AppErrorType.RESOURCE_CONFLICT,
-      );
-    }
-
-    const aluguel = await this.aluguelRepository.findBy({
-      ciclista: createAluguelDto.ciclista,
-    });
-
-    if (aluguel && aluguel.trancaFim == 0 && !aluguel.horaFim) {
-      throw new AppError(
-        'Aluguel não permitido!\n',
-        AppErrorType.RESOURCE_CONFLICT,
+        AppErrorType.RESOURCE_INVALID,
       );
     }
 
@@ -96,10 +92,6 @@ export class AluguelService {
       ciclista: createAluguelDto.ciclista,
       valor: this.COBRANCA_BASE_VALUE,
     });
-
-    if (cobranca.status == CobrancaStatus.FALHA) {
-      throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
-    }
 
     const createdAluguel = await this.aluguelRepository.save({
       ciclista: createAluguelDto.ciclista,
@@ -126,44 +118,8 @@ export class AluguelService {
   async returnBicicletaAluguel(
     returnBicicletaAluguelDto: ReturnBicicletaAluguelDto,
   ) {
-    const bicicleta = await this.equipamentoService.getBicicletaById(
-      returnBicicletaAluguelDto.idBicicleta,
-    );
-
-    if (!bicicleta) {
-      throw new AppError(
-        'Bicicleta não existe!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
-      );
-    }
-
-    if (bicicleta.status != BicicletaStatus.EM_USO) {
-      throw new AppError(
-        'Bicicleta indisponível!\n',
-        AppErrorType.RESOURCE_CONFLICT,
-      );
-    }
-
-    const tranca = await this.equipamentoService.getTrancaById(
-      returnBicicletaAluguelDto.idTranca,
-    );
-
-    if (!tranca) {
-      throw new AppError(
-        'Tranca não existe!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
-      );
-    }
-
-    if (tranca.status != TrancaStatus.LIVRE) {
-      throw new AppError(
-        'Tranca indisponível!\n',
-        AppErrorType.RESOURCE_CONFLICT,
-      );
-    }
-
     const aluguel = await this.aluguelRepository.findBy({
-      bicicleta: bicicleta.id,
+      bicicleta: returnBicicletaAluguelDto.idBicicleta,
       horaFim: null,
       trancaFim: null,
     });
@@ -171,7 +127,7 @@ export class AluguelService {
     if (!aluguel) {
       throw new AppError(
         'Aluguel não existe!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
+        AppErrorType.RESOURCE_INVALID,
       );
     }
 
@@ -182,7 +138,47 @@ export class AluguelService {
     if (!ciclista) {
       throw new AppError(
         'Ciclista não encontrado!\n',
-        AppErrorType.RESOURCE_NOT_FOUND,
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
+    if (ciclista.status != CiclistaStatus.ATIVADO) {
+      throw new AppError(
+        'Ciclista não ativado!\n',
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
+    const bicicleta = await this.equipamentoService.getBicicletaById(
+      returnBicicletaAluguelDto.idBicicleta,
+    );
+
+    if (!bicicleta) {
+      throw new AppError(
+        'Bicicleta não existe!\n',
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
+    if (bicicleta.status != BicicletaStatus.EM_USO) {
+      throw new AppError(
+        'Bicicleta indisponível!\n',
+        AppErrorType.RESOURCE_INVALID,
+      );
+    }
+
+    const tranca = await this.equipamentoService.getTrancaById(
+      returnBicicletaAluguelDto.idTranca,
+    );
+
+    if (!tranca) {
+      throw new AppError('Tranca não existe!\n', AppErrorType.RESOURCE_INVALID);
+    }
+
+    if (tranca.status != TrancaStatus.LIVRE) {
+      throw new AppError(
+        'Tranca indisponível!\n',
+        AppErrorType.RESOURCE_INVALID,
       );
     }
 
@@ -191,7 +187,10 @@ export class AluguelService {
     tempoAluguel = tempoAluguel / (1000 * 60);
 
     const tempoExcedido = Math.ceil(tempoAluguel / 30);
-    const valorRestante = tempoExcedido * this.COBRANCA_PER_HALF_HOUR_VALUE;
+    const valorRestante =
+      (tempoExcedido - 1) * this.COBRANCA_PER_HALF_HOUR_VALUE;
+
+    console.log(tempoAluguel, valorRestante, tempoExcedido);
 
     if (tempoExcedido > 0) {
       await this.externoService.authorizeCobranca({
