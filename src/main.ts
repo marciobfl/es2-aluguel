@@ -6,6 +6,7 @@ import { CustomErrorValidationFilter } from './common/filters/error-validation.f
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.useGlobalPipes(CustomValidationPipe);
   app.useGlobalFilters(new AppErrorFilter());
   app.useGlobalFilters(new CustomErrorValidationFilter());
