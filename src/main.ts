@@ -10,6 +10,7 @@ async function bootstrap() {
     origin: '*',
     methods: '*',
     allowedHeaders: '*',
+    preflightContinue: true,
   });
   app.useGlobalPipes(CustomValidationPipe);
   app.useGlobalFilters(new AppErrorFilter());
