@@ -20,7 +20,7 @@ export class ExternoService {
         mensagem: body,
       });
     } catch {
-      throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
+      throw new AppError('ERRO!', AppErrorType.RESOURCE_INVALID);
     }
   }
   async authorizeCobranca(cobranca: CreateCobranca): Promise<Cobranca> {
@@ -31,7 +31,7 @@ export class ExternoService {
       });
       return response.data;
     } catch {
-      throw new AppError('ERRO!', AppErrorType.RESOURCE_CONFLICT);
+      throw new AppError('ERRO!', AppErrorType.RESOURCE_INVALID);
     }
   }
 }

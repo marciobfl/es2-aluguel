@@ -139,7 +139,7 @@ export class CiclistaService {
     if (ciclista.status != CiclistaStatus.ATIVADO) {
       throw new AppError(
         'Ciclista não ativado!\n',
-        AppErrorType.RESOURCE_CONFLICT,
+        AppErrorType.RESOURCE_NOT_FOUND,
       );
     }
 
@@ -147,7 +147,7 @@ export class CiclistaService {
       ciclista: idCiclista,
     });
 
-    if (aluguel && aluguel.trancaFim == 0 && !aluguel.horaFim) {
+    if (aluguel && !aluguel.horaFim) {
       return false;
     }
 
@@ -167,7 +167,7 @@ export class CiclistaService {
     if (ciclista.status != CiclistaStatus.ATIVADO) {
       throw new AppError(
         'Ciclista não ativado!\n',
-        AppErrorType.RESOURCE_CONFLICT,
+        AppErrorType.RESOURCE_NOT_FOUND,
       );
     }
 

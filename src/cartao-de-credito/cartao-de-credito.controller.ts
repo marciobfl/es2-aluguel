@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Put } from '@nestjs/common';
 import { CartaoDeCreditoService } from './cartao-de-credito.service';
 import UpdateCartaoDeCreditoDto from './dto/update-cartao-de-credito.dto';
 
@@ -14,6 +14,7 @@ export default class CartaoDeCreditoController {
   }
 
   @Put('/:idCiclista')
+  @HttpCode(200)
   updateCartaoDeCredito(
     @Param('idCiclista') idCiclista: number,
     @Body() data: UpdateCartaoDeCreditoDto,

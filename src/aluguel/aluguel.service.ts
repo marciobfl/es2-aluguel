@@ -153,9 +153,11 @@ export class AluguelService {
       returnBicicletaAluguelDto.idBicicleta,
     );
 
+    console.log(bicicleta);
+
     if (!bicicleta) {
       throw new AppError(
-        'Bicicleta não existe!\n',
+        'Bicicleta não existe!',
         AppErrorType.RESOURCE_INVALID,
       );
     }
@@ -186,13 +188,13 @@ export class AluguelService {
     let tempoAluguel = horaFim.getTime() - aluguel.horaInicio.getTime();
     tempoAluguel = tempoAluguel / (1000 * 60);
 
-    const tempoExcedido = Math.ceil(tempoAluguel / 30);
-    const valorRestante =
-      (tempoExcedido - 1) * this.COBRANCA_PER_HALF_HOUR_VALUE;
-
-    console.log(tempoAluguel, valorRestante, tempoExcedido);
+    const LIMITE_INICIAL = 120;
+    let tempoExcedido = tempoAluguel - LIMITE_INICIAL;
 
     if (tempoExcedido > 0) {
+      tempoExcedido = Math.ceil(tempoExcedido / 30);
+      const valorRestante = tempoExcedido * this.COBRANCA_PER_HALF_HOUR_VALUE;
+
       await this.externoService.authorizeCobranca({
         ciclista: aluguel.ciclista,
         valor: valorRestante,

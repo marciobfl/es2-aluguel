@@ -27,11 +27,13 @@ export default class CiclistaController {
   }
 
   @Post('/:idCiclista/ativar')
+  @HttpCode(200)
   activateCiclista(@Param('idCiclista') idCiclista: number) {
     return this.ciclistaService.activateCiclista(idCiclista);
   }
 
   @Put('/:idCiclista')
+  @HttpCode(200)
   updateCiclista(
     @Param('idCiclista') idCiclista: number,
     @Body() updateCiclistaDto: UpdateCiclistaDto,

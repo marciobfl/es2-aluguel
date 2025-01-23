@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -17,6 +18,7 @@ export default class FuncionarioController {
   constructor(private readonly funcionarioService: FuncionarioService) {}
 
   @Post('/')
+  @HttpCode(200)
   createFuncionario(@Body() createFuncionarioDto: CreateFuncionarioDto) {
     return this.funcionarioService.createFuncionario(createFuncionarioDto);
   }
@@ -29,6 +31,7 @@ export default class FuncionarioController {
   }
 
   @Put(':idFuncionario')
+  @HttpCode(200)
   updateFuncionario(
     @Param('idFuncionario') idFuncionario: number,
     @Body() data: UpdateFuncionarioDto,
