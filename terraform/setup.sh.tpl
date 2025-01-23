@@ -7,4 +7,3 @@ sudo chkconfig docker on
 docker ps -q --filter "ancestor=joaocansi/es2-aluguel" | xargs -r docker stop | xargs -r docker rm
 docker pull joaocansi/es2-aluguel:${COMMIT}
 docker run -p 80:8000 -d joaocansi/es2-aluguel:${COMMIT}
-mkdir testeste
