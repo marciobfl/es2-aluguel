@@ -17,7 +17,7 @@ export class TypeormCiclistaRepository implements CiclistaRepository {
     return this.ciclistaDatabase.findOne({
       where: {
         id: id,
-        status: Not(CiclistaStatus.CONFIRMACAO_PENDENTE),
+        status: Not(CiclistaStatus.AGUARDANDO_CONFIRMACAO),
       },
     });
   }

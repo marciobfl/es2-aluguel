@@ -37,7 +37,7 @@ export class AluguelService {
       );
     }
 
-    if (ciclista.status != CiclistaStatus.ATIVADO) {
+    if (ciclista.status != CiclistaStatus.ATIVO) {
       throw new AppError(
         'Ciclista não ativado!\n',
         AppErrorType.RESOURCE_INVALID,
@@ -142,7 +142,7 @@ export class AluguelService {
       );
     }
 
-    if (ciclista.status != CiclistaStatus.ATIVADO) {
+    if (ciclista.status != CiclistaStatus.ATIVO) {
       throw new AppError(
         'Ciclista não ativado!\n',
         AppErrorType.RESOURCE_INVALID,

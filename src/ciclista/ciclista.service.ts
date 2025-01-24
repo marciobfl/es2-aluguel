@@ -42,7 +42,7 @@ export class CiclistaService {
     const newCiclista = await this.ciclistaRepository.save({
       ...ciclista,
       cartaoDeCredito: meioDePagamento,
-      status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+      status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
     });
 
     return CiclistaEntity.toDomain(newCiclista);
@@ -65,14 +65,14 @@ export class CiclistaService {
       );
     }
 
-    if (ciclista.status == CiclistaStatus.ATIVADO) {
+    if (ciclista.status == CiclistaStatus.ATIVO) {
       throw new AppError(
         'Ciclista já ativado!\n',
         AppErrorType.RESOURCE_NOT_FOUND,
       );
     }
 
-    ciclista.status = CiclistaStatus.ATIVADO;
+    ciclista.status = CiclistaStatus.ATIVO;
     const activatedCiclista = await this.ciclistaRepository.save(ciclista);
 
     return CiclistaEntity.toDomain(activatedCiclista);
@@ -90,7 +90,7 @@ export class CiclistaService {
       );
     }
 
-    if (ciclista.status != CiclistaStatus.ATIVADO) {
+    if (ciclista.status != CiclistaStatus.ATIVO) {
       throw new AppError(
         'Ciclista não ativado!\n',
         AppErrorType.RESOURCE_NOT_FOUND,
@@ -136,7 +136,7 @@ export class CiclistaService {
       );
     }
 
-    if (ciclista.status != CiclistaStatus.ATIVADO) {
+    if (ciclista.status != CiclistaStatus.ATIVO) {
       throw new AppError(
         'Ciclista não ativado!\n',
         AppErrorType.RESOURCE_NOT_FOUND,
@@ -164,7 +164,7 @@ export class CiclistaService {
       );
     }
 
-    if (ciclista.status != CiclistaStatus.ATIVADO) {
+    if (ciclista.status != CiclistaStatus.ATIVO) {
       throw new AppError(
         'Ciclista não ativado!\n',
         AppErrorType.RESOURCE_NOT_FOUND,

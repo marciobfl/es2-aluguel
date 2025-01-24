@@ -40,7 +40,7 @@ describe('AluguelService', () => {
       urlFotoDocumento: 'string',
       senha: 'string',
       cartaoDeCredito: null,
-      status: CiclistaStatus.ATIVADO,
+      status: CiclistaStatus.ATIVO,
     };
 
     bicicleta = {
@@ -227,7 +227,7 @@ describe('AluguelService', () => {
     it('should throw an error if ciclista is not activated', async () => {
       tranca.status = TrancaStatus.OCUPADA;
       bicicleta.status = BicicletaStatus.DISPONIVEL;
-      ciclista.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      ciclista.status = CiclistaStatus.AGUARDANDO_CONFIRMACAO;
 
       jest
         .spyOn(mockEquipamentoService, 'getTrancaById')
@@ -328,7 +328,7 @@ describe('AluguelService', () => {
     });
 
     it('should throw an error if ciclista is not activated', async () => {
-      ciclista.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      ciclista.status = CiclistaStatus.AGUARDANDO_CONFIRMACAO;
 
       jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
       jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
@@ -396,7 +396,7 @@ describe('AluguelService', () => {
 
     it('should complete aluguel successfully', async () => {
       tranca.status = TrancaStatus.LIVRE;
-      ciclista.status = CiclistaStatus.ATIVADO;
+      ciclista.status = CiclistaStatus.ATIVO;
 
       jest.spyOn(mockCiclistaRepository, 'findBy').mockResolvedValue(ciclista);
 

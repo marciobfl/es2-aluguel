@@ -41,7 +41,7 @@ describe('TypeormCiclistaRepository', () => {
         email: 'test@example.com',
         urlFotoDocumento: 'url',
         senha: 'senha',
-        status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+        status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
         passaporte: null,
         cartaoDeCredito: null,
       };
@@ -82,7 +82,7 @@ describe('TypeormCiclistaRepository', () => {
         email: 'test@example.com',
         urlFotoDocumento: 'url',
         senha: 'senha',
-        status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+        status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
         passaporte: null,
         cartaoDeCredito: null,
       };
@@ -106,7 +106,7 @@ describe('TypeormCiclistaRepository', () => {
         email: 'test@example.com',
         urlFotoDocumento: 'url',
         senha: 'senha',
-        status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+        status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
         passaporte: null,
         cartaoDeCredito: null,
       };

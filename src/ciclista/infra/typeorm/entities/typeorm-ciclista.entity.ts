@@ -37,7 +37,7 @@ export default class TypeormCiclistaEntity {
 
   @Column({
     type: 'varchar',
-    default: CiclistaStatus.CONFIRMACAO_PENDENTE,
+    default: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
   })
   status: CiclistaStatus;
 

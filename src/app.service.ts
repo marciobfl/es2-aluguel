@@ -45,7 +45,7 @@ export default class AppService {
       this.dataSource.getRepository(TypeormAluguelEntity);
 
     await ciclistasRepository.save({
-      status: CiclistaStatus.ATIVADO,
+      status: CiclistaStatus.ATIVO,
       nome: 'Fulano Beltrano',
       nascimento: '2021-05-02',
       cpf: '78804034009',
@@ -62,7 +62,7 @@ export default class AppService {
     });
 
     await ciclistasRepository.save({
-      status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+      status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
       nome: 'Fulano Beltrano',
       nascimento: '2021-05-02',
       cpf: '43943488039',
@@ -79,7 +79,7 @@ export default class AppService {
     });
 
     const ciclista3 = await ciclistasRepository.save({
-      status: CiclistaStatus.ATIVADO,
+      status: CiclistaStatus.ATIVO,
       nome: 'Fulano Beltrano',
       nascimento: '2021-05-02',
       cpf: '10243164084',
@@ -96,7 +96,7 @@ export default class AppService {
     });
 
     const ciclista4 = await ciclistasRepository.save({
-      status: CiclistaStatus.ATIVADO,
+      status: CiclistaStatus.ATIVO,
       nome: 'Fulano Beltrano',
       nascimento: '2021-05-02',
       cpf: '30880150017',

@@ -1,8 +1,9 @@
 import Passaporte from './passaporte';
 
 export enum CiclistaStatus {
-  CONFIRMACAO_PENDENTE = 'CONFIRMACAO_PENDENTE',
-  ATIVADO = 'ATIVADO',
+  AGUARDANDO_CONFIRMACAO = 'AGUARDANDO_CONFIRMACAO',
+  ATIVO = 'ATIVO',
+  INATIVO = 'INATIVO',
 }
 
 export class Ciclista {

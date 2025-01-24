@@ -19,7 +19,7 @@ describe('CiclistaEntity', () => {
       ciclistaEntity.email = 'user@example.com';
       ciclistaEntity.urlFotoDocumento = 'http://example.com/documento.jpg';
       ciclistaEntity.senha = 'password1234';
-      ciclistaEntity.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      ciclistaEntity.status = CiclistaStatus.AGUARDANDO_CONFIRMACAO;
       ciclistaEntity.passaporte = passaporte;
       ciclistaEntity.cartaoDeCredito = null;
 

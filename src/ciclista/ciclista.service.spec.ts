@@ -51,7 +51,7 @@ describe('CiclistaService', () => {
     ciclista = {
       id: 1,
       ...createCiclista.ciclista,
-      status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+      status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
       cartaoDeCredito: new TypeormCartaoDeCreditoEntity(),
     };
 
@@ -143,7 +143,7 @@ describe('CiclistaService', () => {
   it('should throw an error if the ciclista status is already ativado', async () => {
     const id = ciclista.id;
     jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
-    ciclista.status = CiclistaStatus.ATIVADO;
+    ciclista.status = CiclistaStatus.ATIVO;
     jest.spyOn(mockRepository, 'save').mockResolvedValue(ciclista);
     await expect(ciclistaService.activateCiclista(id)).rejects.toThrow(
       'Ciclista já ativado!\n',
@@ -162,7 +162,7 @@ describe('CiclistaService', () => {
     const id = ciclista.id;
     jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
     jest.spyOn(mockRepository, 'save').mockResolvedValue(ciclista);
-    ciclistaDomain.status = CiclistaStatus.ATIVADO;
+    ciclistaDomain.status = CiclistaStatus.ATIVO;
     await expect(ciclistaService.activateCiclista(id)).resolves.toEqual(
       ciclistaDomain,
     );
@@ -197,7 +197,7 @@ describe('CiclistaService', () => {
     });
 
     it('should throw an error if ciclista is not activated', async () => {
-      ciclista.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      ciclista.status = CiclistaStatus.AGUARDANDO_CONFIRMACAO;
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
 
       await expect(
@@ -207,7 +207,7 @@ describe('CiclistaService', () => {
     });
 
     it('should update ciclista when ciclista is found and activated', async () => {
-      ciclista.status = CiclistaStatus.ATIVADO;
+      ciclista.status = CiclistaStatus.ATIVO;
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
 
       ciclista.nome = 'teste';
@@ -224,7 +224,7 @@ describe('CiclistaService', () => {
 
   describe('allowAluguel', () => {
     it('should return false if the ciclista has an ongoing rental', async () => {
-      ciclista.status = CiclistaStatus.ATIVADO;
+      ciclista.status = CiclistaStatus.ATIVO;
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
       jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
       await expect(ciclistaService.allowAluguel(ciclista.id)).resolves.toBe(
@@ -233,7 +233,7 @@ describe('CiclistaService', () => {
     });
 
     it('should return true if the ciclista has no ongoing rental', async () => {
-      ciclista.status = CiclistaStatus.ATIVADO;
+      ciclista.status = CiclistaStatus.ATIVO;
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
       jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(null);
       await expect(ciclistaService.allowAluguel(ciclista.id)).resolves.toBe(
@@ -249,7 +249,7 @@ describe('CiclistaService', () => {
     });
 
     it('should throw an error if ciclista is not activated', async () => {
-      ciclista.status = CiclistaStatus.CONFIRMACAO_PENDENTE;
+      ciclista.status = CiclistaStatus.AGUARDANDO_CONFIRMACAO;
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
       await expect(ciclistaService.allowAluguel(ciclista.id)).rejects.toThrow(
         'Ciclista não ativado!\n',
@@ -259,7 +259,7 @@ describe('CiclistaService', () => {
 
   describe('rentedBicicleta', () => {
     it('should return bicicleta details if the ciclista has an active rental', async () => {
-      ciclista.status = CiclistaStatus.ATIVADO;
+      ciclista.status = CiclistaStatus.ATIVO;
 
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
       jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(aluguel);
@@ -273,7 +273,7 @@ describe('CiclistaService', () => {
     });
 
     it('should return an empty object if the ciclista has no active rental', async () => {
-      ciclista.status = CiclistaStatus.ATIVADO;
+      ciclista.status = CiclistaStatus.ATIVO;
 
       jest.spyOn(mockRepository, 'findBy').mockResolvedValue(ciclista);
       jest.spyOn(mockAluguelRepository, 'findBy').mockResolvedValue(null);

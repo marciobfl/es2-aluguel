@@ -60,7 +60,7 @@ describe('CiclistaController', () => {
     nacionalidade: 'Brasileiro',
     email: 'user@example.com',
     urlFotoDocumento: 'https://example.com/documento.jpg',
-    status: CiclistaStatus.CONFIRMACAO_PENDENTE,
+    status: CiclistaStatus.AGUARDANDO_CONFIRMACAO,
   };
 
   beforeEach(async () => {
@@ -115,7 +115,7 @@ describe('CiclistaController', () => {
     const idCiclista = 1;
     const activatedCiclista = {
       ...ciclista,
-      status: CiclistaStatus.ATIVADO,
+      status: CiclistaStatus.ATIVO,
     };
     ciclistaService.activateCiclista.mockResolvedValueOnce(activatedCiclista);
 
